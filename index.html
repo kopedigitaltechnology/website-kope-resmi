@@ -84,7 +84,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 90px;color:var(--mute);fo
 <main>
 <div id="warn" class="wrap msg err" style="display:none;margin-top:14px">Firebase belum diisi. Buka file ini, cari bagian KONFIGURASI di atas script, lalu tempel kode dari akun Firebase kamu.</div>
 
-<div id="palsu" class="wrap msg err" style="display:none;margin-top:14px">Situs ini tidak terverifikasi sebagai situs resmi KOPE Technology, jadi data tidak ditampilkan. Situs resmi: https://kopedigitaltechnology.github.io/Main/</div>
+<div id="palsu" class="wrap msg err" style="display:none;margin-top:14px"></div>
 <div id="verif" class="wrap msg err" style="display:none;margin-top:14px">Email admin belum diverifikasi. Buka email dari Firebase, tekan tautan verifikasi, lalu tekan tombol di bawah.<br>
 <button class="btn sm" id="kirimUlang" type="button" style="margin-top:8px">Kirim ulang email</button> <button class="btn sm" id="sudahVerif" type="button" style="margin-top:8px">Saya sudah verifikasi</button></div>
 
@@ -194,7 +194,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 90px;color:var(--mute);fo
 <!-- ============ ADMIN ============ -->
 <section id="p-admin" class="panel"><div class="wrap">
 <h2>Admin</h2>
-<div class="tabs"><button class="btn sm on" data-t="a-produk">Produk</button><button class="btn sm" data-t="a-req">Permintaan layanan</button><button class="btn sm" data-t="a-home">Beranda</button><button class="btn sm" data-t="a-sub">Langganan</button><button class="btn sm" data-t="a-co">Perusahaan</button><button class="btn sm" data-t="a-set">Pengaturan</button></div>
+<div class="tabs"><button class="btn sm on" data-t="a-produk">Produk</button><button class="btn sm" data-t="a-req">Permintaan layanan</button><button class="btn sm" data-t="a-home">Beranda</button><button class="btn sm" data-t="a-sub">Langganan</button><button class="btn sm" data-t="a-sos">Sosial</button><button class="btn sm" data-t="a-co">Perusahaan</button><button class="btn sm" data-t="a-set">Pengaturan</button></div>
 <div id="a-produk" class="at">
 <form id="fProduk" class="card" style="margin-bottom:18px">
 <div class="grid">
@@ -228,6 +228,13 @@ footer{border-top:1px solid var(--line);padding:30px 0 90px;color:var(--mute);fo
 <label>Jatuh tempo<input name="due" type="date" required></label>
 <button class="btn main" type="submit">Simpan langganan</button><div id="mSub" role="status"></div></form>
 <div id="aListSub"></div></div>
+<div id="a-sos" class="at" hidden>
+<form id="fSos" class="card" style="max-width:560px;margin-bottom:18px"><p class="small">Tampil di bagian bawah semua halaman. Disimpan di server Firebase.</p>
+<label>Platform<select name="p"><option value="youtube">YouTube</option><option value="tiktok">TikTok</option><option value="facebook">Facebook</option><option value="instagram">Instagram</option><option value="lain">Tautan lainnya</option></select></label>
+<label>Nama tombol (wajib untuk tautan lainnya)<input name="nama" maxlength="40"></label>
+<label>URL https://<input name="url" type="url" required placeholder="https://..."></label>
+<button class="btn main" type="submit">Tambah</button><div id="mSos" role="status"></div></form>
+<div id="aListSos"></div></div>
 <div id="a-co" class="at" hidden>
 <form id="fCo" class="card" style="max-width:560px"><p class="small">Data ini disimpan di server Firebase dan tampil di halaman Lokasi.</p>
 <label>Nama perusahaan<input name="nama" maxlength="80"></label>
@@ -242,6 +249,8 @@ footer{border-top:1px solid var(--line);padding:30px 0 90px;color:var(--mute);fo
 <button class="btn main" type="submit">Simpan</button><div id="mCo" role="status"></div></form>
 <form id="fVer" class="card" style="max-width:560px;margin-top:18px"><h3>Verifikasi situs resmi</h3><p class="small">Lencana centang biru dan data situs hanya tampil di domain yang tertulis di sini. Di domain lain, lencana hilang dan data tidak dimuat.</p>
 <label>Domain resmi (tanpa https://)<input name="domain" required maxlength="100"></label>
+<label>Alamat situs resmi (ditampilkan di peringatan)<input name="url" type="url" placeholder="https://..."></label>
+<label>Pesan peringatan di situs tidak resmi<textarea name="pesan" rows="3" maxlength="300"></textarea></label>
 <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" name="aktif" style="width:auto"> Aktifkan verifikasi</label>
 <button class="btn main" type="submit">Simpan verifikasi</button><div id="mVer" role="status"></div></form></div>
 <div id="a-set" class="at" hidden>
@@ -267,7 +276,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 90px;color:var(--mute);fo
 </div></section>
 </main>
 
-<footer><div class="wrap"><a href="#privasi" style="text-decoration:underline">Kebijakan Privasi</a><br><strong style="color:var(--text)">KOPE Technology</strong><br>Innovation for Everyone.<br>© <span id="y"></span> KOPE Technology</div></footer>
+<footer><div class="wrap"><div id="sosialBox" class="btns" style="justify-content:flex-start;margin-bottom:12px"></div><a href="#privasi" style="text-decoration:underline">Kebijakan Privasi</a><br><strong style="color:var(--text)">KOPE Technology</strong><br>Innovation for Everyone.<br>© <span id="y"></span> KOPE Technology</div></footer>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -341,12 +350,17 @@ if(firebaseConfig.apiKey.indexOf('ISI')===0){
   firebase.initializeApp(firebaseConfig);auth=firebase.auth();db=firebase.firestore();
   mulai=function(){if(started)return;started=true;
   db.collection('home').onSnapshot(function(s){home=s.docs.map(function(d){var x=d.data();x.id=d.id;return x});renderHome();if($('p-admin').classList.contains('on'))loadHome()},function(){});
+  db.collection('settings').doc('sosial').onSnapshot(function(d){sos=d.exists&&Array.isArray(d.data().daftar)?d.data().daftar:[];renderSosial()},function(){});
   db.collection('settings').doc('company').onSnapshot(function(d){co=d.exists?d.data():{};renderKontak()},function(){});
   db.collection('products').onSnapshot(function(s){produk=s.docs.map(function(d){var x=d.data();x.id=d.id;return x});renderProduk();if($('detail').classList.contains('on'))openDetail();if($('p-admin').classList.contains('on'))loadAdmin()},function(){$('daftarProduk').textContent='Produk belum bisa dimuat.'});
   };
   auth.onAuthStateChanged(function(u){user=u;isAdmin=!!u&&u.emailVerified&&(u.email||'').toLowerCase()===ADMIN_EMAIL;if(isAdmin)mulai();afterAuth()});
-  db.collection('settings').doc('verifikasi').get().then(function(d){verData=d.exists?d.data():{};resmi=verData.aktif===true&&verData.domain===location.hostname;document.body.classList.toggle('resmiOk',resmi);if(resmi)mulai();else $('palsu').style.display='block'}).catch(function(){$('palsu').style.display='block'});
+  db.collection('settings').doc('verifikasi').get().then(function(d){verData=d.exists?d.data():{};resmi=verData.aktif===true&&verData.domain===location.hostname;document.body.classList.toggle('resmiOk',resmi);if(resmi)mulai();else tampilPalsu(!d.exists?'belum-diatur':verData.aktif!==true?'tidak-aktif':'domain-beda')}).catch(function(){tampilPalsu('akses-ditolak')});
 }
+function tampilPalsu(why){var b=$('palsu');b.innerHTML='';
+  b.appendChild(document.createTextNode(verData.pesan||'Situs ini tidak terverifikasi sebagai situs resmi.'));
+  var u=aman(verData.url);if(u){b.appendChild(document.createTextNode(' Situs resmi: '));var a=el('a','',u);a.href=u;a.rel='noopener noreferrer';a.style.textDecoration='underline';b.appendChild(a)}
+  b.appendChild(el('div','small','Kode: '+why));b.style.display='block'}
 var idle;
 function resetIdle(){clearTimeout(idle);if(isAdmin)idle=setTimeout(function(){auth.signOut();alert('Sesi admin berakhir karena tidak aktif selama 30 menit.')},1800000)}
 ['click','keydown','touchstart'].forEach(function(ev){document.addEventListener(ev,resetIdle,{passive:true})});
@@ -404,7 +418,11 @@ function renderProduk(){
 }
 
 /* detail produk & ulasan */
-var home=[];
+var home=[],sos=[],NAMA={youtube:'YouTube',tiktok:'TikTok',facebook:'Facebook',instagram:'Instagram'};
+function renderSosial(){var b=$('sosialBox');b.innerHTML='';sos.forEach(function(o){var u=aman(o.url);if(!u)return;var a=el('a','btn sm',o.nama||NAMA[o.p]||'Tautan');a.href=u;a.target='_blank';a.rel='noopener noreferrer';b.appendChild(a)});
+  var L=$('aListSos');if(L){L.innerHTML='';if(!sos.length)L.appendChild(el('p','ph','Belum ada tautan sosial.'));
+    sos.forEach(function(o,k){var r=el('div','item row');r.appendChild(el('div','',(o.nama||NAMA[o.p]||'Tautan')+' \u2014 '+o.url));var d=el('button','btn sm','Hapus');d.onclick=function(){if(confirm('Hapus tautan ini?'))simpanSos(sos.filter(function(_,n){return n!==k}),$('mSos'))};r.appendChild(d);L.appendChild(r)})}}
+function simpanSos(arr,m){note(m,'Menyimpan\u2026');db.collection('settings').doc('sosial').set({daftar:arr}).then(function(){note(m,'Tersimpan di server.','ok')}).catch(function(x){note(m,galat(x),'err')})}
 function embed(u){u=aman(u);if(!u)return null;var x=new URL(u),h=x.hostname.replace(/^(www|m)\./,''),id=null,m,P=x.pathname;
   if(h==='youtu.be')id=P.slice(1);
   else if(/(^|\.)youtube\.com$/.test(h)){id=x.searchParams.get('v');m=P.match(/\/(shorts|embed|live)\/([\w-]+)/);if(m)id=m[2]}
@@ -507,7 +525,7 @@ function loadSubs(){db.collection('subs').orderBy('due').get().then(function(s){
     var r=el('div','item row'),i=el('div');i.appendChild(el('strong','',o.cust+' ('+(o.plan==='tahun'?'tahunan':'bulanan')+')'));i.appendChild(el('div','small',(o.site||'-')+' \u00b7 jatuh tempo '+o.due));var sp=el('div','',st);if(bad)sp.style.color='var(--bad)';i.appendChild(sp);r.appendChild(i);
     var w=el('div','row'),pj=el('button','btn sm','Perpanjang');pj.onclick=function(){var t=new Date(o.due+'T00:00:00Z');if(o.plan==='tahun')t.setUTCFullYear(t.getUTCFullYear()+1);else t.setUTCMonth(t.getUTCMonth()+1);d.ref.update({due:tglIso(t)}).then(loadSubs)};
     var h=el('button','btn sm','Hapus');h.onclick=function(){if(confirm('Hapus catatan ini?'))d.ref.delete().then(loadSubs)};w.appendChild(pj);w.appendChild(h);r.appendChild(w);L.appendChild(r)})}).catch(function(){$('aListSub').textContent='Tidak bisa memuat.'})}
-function loadAdmin(){loadHome();loadSubs();var fv=$('fVer');if(document.activeElement!==fv.domain){fv.domain.value=verData.domain||location.hostname;fv.aktif.checked=verData.aktif===true}
+function loadAdmin(){loadHome();loadSubs();var fv=$('fVer');if(document.activeElement!==fv.domain){fv.domain.value=verData.domain||location.hostname;fv.aktif.checked=verData.aktif===true;fv.url.value=verData.url||'https://kopedigitaltechnology.github.io/website-kope-resmi/';fv.pesan.value=verData.pesan||'Situs ini tidak terverifikasi sebagai situs resmi KOPE Technology, jadi data tidak ditampilkan.'}
   var fc=$('fCo');['nama','alamat','email','telepon','wa','jam','maps','hargaBulan','hargaTahun'].forEach(function(k){if(document.activeElement!==fc[k])fc[k].value=co[k]||''});
   $('sAuth').textContent=user?'Aktif (email dan Google)':'Belum masuk';
   $('sHttps').textContent=location.protocol==='https:'?'Aktif':'Belum aktif. Buka lewat alamat https://';
@@ -552,8 +570,11 @@ $('fSub').onsubmit=function(e){e.preventDefault();var f=e.target,m=$('mSub');not
   db.collection('subs').add({cust:f.cust.value.trim(),site:f.site.value.trim(),plan:f.plan.value,due:f.due.value,createdAt:firebase.firestore.FieldValue.serverTimestamp()})
   .then(function(){f.reset();note(m,'Tersimpan.','ok');loadSubs()}).catch(function(x){note(m,galat(x),'err')})};
 $('fVer').onsubmit=function(e){e.preventDefault();var f=e.target,m=$('mVer'),dm=f.domain.value.trim().toLowerCase();
-  if(!/^[a-z0-9.-]+\.[a-z]{2,}$/.test(dm)){note(m,'Tulis domain saja, contoh: kopedigitaltechnology.github.io','err');return}note(m,'Menyimpan\u2026');
-  db.collection('settings').doc('verifikasi').set({domain:dm,aktif:f.aktif.checked}).then(function(){verData={domain:dm,aktif:f.aktif.checked};note(m,'Tersimpan. Segarkan halaman untuk melihat hasilnya.','ok')}).catch(function(x){note(m,galat(x),'err')})};
+  if(!/^[a-z0-9.-]+\.[a-z]{2,}$/.test(dm)){note(m,'Tulis domain saja, contoh: kopedigitaltechnology.github.io','err');return}var u=f.url.value.trim();if(u&&!aman(u)){note(m,'Alamat situs harus diawali https://','err');return}note(m,'Menyimpan\u2026');var dv={domain:dm,aktif:f.aktif.checked,url:u,pesan:f.pesan.value.trim()};
+  db.collection('settings').doc('verifikasi').set(dv).then(function(){verData=dv;note(m,'Tersimpan. Segarkan halaman untuk melihat hasilnya.','ok')}).catch(function(x){note(m,galat(x),'err')})};
+$('fSos').onsubmit=function(e){e.preventDefault();var f=e.target,m=$('mSos'),u=aman(f.url.value.trim());
+  if(!u){note(m,'URL harus diawali https://','err');return}if(f.p.value==='lain'&&!f.nama.value.trim()){note(m,'Isi nama tombol.','err');return}
+  simpanSos(sos.concat([{p:f.p.value,nama:f.nama.value.trim(),url:u}]),m);f.reset()};
 $('fCo').onsubmit=function(e){e.preventDefault();var f=e.target,m=$('mCo'),mp=f.maps.value.trim();
   if(mp&&!aman(mp)){note(m,'Tautan Maps harus diawali https://','err');return}
   var d={};['nama','alamat','email','telepon','wa','jam'].forEach(function(k){d[k]=f[k].value.trim()});d.maps=mp;d.hargaBulan=Number(f.hargaBulan.value)||0;d.hargaTahun=Number(f.hargaTahun.value)||0;note(m,'Menyimpan\u2026');
