@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://kopedigitaltechnology.github.io/website-kope-resmi/sitemap.xml
+Sitemap: https://kopedigitaltechnology.my.id/sitemap.xml

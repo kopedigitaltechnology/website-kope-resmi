@@ -10,19 +10,19 @@
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>KOPE Digital Technology (KOPE Technology) — Innovation for Everyone</title>
 <meta name="description" content="Situs resmi KOPE Digital Technology (KOPE Technology): solusi digital, aplikasi, website, dan teknologi modern untuk individu dan bisnis.">
-<link rel="canonical" href="https://kopedigitaltechnology.github.io/website-kope-resmi/">
+<link rel="canonical" href="https://kopedigitaltechnology.my.id/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="KOPE Digital Technology">
 <meta property="og:title" content="KOPE Digital Technology — Innovation for Everyone">
 <meta property="og:description" content="KOPE Digital Technology (KOPE Technology): solusi digital, aplikasi, website, dan teknologi modern untuk individu dan bisnis.">
-<meta property="og:url" content="https://kopedigitaltechnology.github.io/website-kope-resmi/">
-<meta property="og:image" content="https://kopedigitaltechnology.github.io/website-kope-resmi/logo-kope.jpg">
+<meta property="og:url" content="https://kopedigitaltechnology.my.id/">
+<meta property="og:image" content="https://kopedigitaltechnology.my.id/logo-kope.jpg">
 <meta property="og:locale" content="id_ID">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="KOPE Digital Technology — Innovation for Everyone">
 <meta name="twitter:description" content="Solusi digital, aplikasi, website, dan teknologi modern untuk individu dan bisnis.">
-<meta name="twitter:image" content="https://kopedigitaltechnology.github.io/website-kope-resmi/logo-kope.jpg">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"KOPE Digital Technology","alternateName":"KOPE Technology","url":"https://kopedigitaltechnology.github.io/website-kope-resmi/","logo":"https://kopedigitaltechnology.github.io/website-kope-resmi/logo-kope.jpg","slogan":"Innovation for Everyone"}</script>
+<meta name="twitter:image" content="https://kopedigitaltechnology.my.id/logo-kope.jpg">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"KOPE Digital Technology","alternateName":"KOPE Technology","url":"https://kopedigitaltechnology.my.id/","logo":"https://kopedigitaltechnology.my.id/logo-kope.jpg","slogan":"Innovation for Everyone"}</script>
 <style>
 :root{--bg:#080B12;--panel:#0F1522;--line:#1E2740;--text:#F4F6FB;--mute:#A1A1AA;--blue:#2563EB;--cyan:#22D3EE;--bad:#f87171;box-sizing:border-box}
 *,*::before,*::after{box-sizing:inherit}
@@ -553,7 +553,7 @@ function loadSubs(){db.collection('subs').orderBy('due').get().then(function(s){
     var w=el('div','row'),pj=el('button','btn sm','Perpanjang');pj.onclick=function(){var t=new Date(o.due+'T00:00:00Z');if(o.plan==='tahun')t.setUTCFullYear(t.getUTCFullYear()+1);else t.setUTCMonth(t.getUTCMonth()+1);d.ref.update({due:tglIso(t)}).then(loadSubs)};
     var h=el('button','btn sm','Hapus');h.onclick=function(){if(confirm('Hapus catatan ini?'))d.ref.delete().then(loadSubs)};w.appendChild(pj);w.appendChild(h);r.appendChild(w);L.appendChild(r)})}).catch(function(){$('aListSub').textContent='Tidak bisa memuat.'})}
 function loadAdmin(){loadHome();loadSubs();var ff=$('fFoot');if(document.activeElement!==ff.nama){var d=Object.assign({},FOOT_DEF,foot);ff.nama.value=d.nama;ff.slogan.value=d.slogan;ff.hak.value=d.hak}
-  var fv=$('fVer');if(document.activeElement!==fv.domain){fv.domain.value=verData.domain||location.hostname;fv.aktif.checked=verData.aktif===true;fv.url.value=verData.url||'https://kopedigitaltechnology.github.io/website-kope-resmi/';fv.pesan.value=verData.pesan||'Situs ini tidak terverifikasi sebagai situs resmi KOPE Technology, jadi data tidak ditampilkan.'}
+  var fv=$('fVer');if(document.activeElement!==fv.domain){fv.domain.value=verData.domain||location.hostname;fv.aktif.checked=verData.aktif===true;fv.url.value=verData.url||'https://kopedigitaltechnology.my.id/';fv.pesan.value=verData.pesan||'Situs ini tidak terverifikasi sebagai situs resmi KOPE Technology, jadi data tidak ditampilkan.'}
   var fc=$('fCo');['nama','alamat','email','telepon','wa','jam','maps','hargaBulan','hargaTahun'].forEach(function(k){if(document.activeElement!==fc[k])fc[k].value=co[k]||''});
   $('sAuth').textContent=user?'Aktif (email dan Google)':'Belum masuk';
   $('sHttps').textContent=location.protocol==='https:'?'Aktif':'Belum aktif. Buka lewat alamat https://';
@@ -598,7 +598,7 @@ $('fSub').onsubmit=function(e){e.preventDefault();var f=e.target,m=$('mSub');not
   db.collection('subs').add({cust:f.cust.value.trim(),site:f.site.value.trim(),plan:f.plan.value,due:f.due.value,createdAt:firebase.firestore.FieldValue.serverTimestamp()})
   .then(function(){f.reset();note(m,'Tersimpan.','ok');loadSubs()}).catch(function(x){note(m,galat(x),'err')})};
 $('fVer').onsubmit=function(e){e.preventDefault();var f=e.target,m=$('mVer'),dm=f.domain.value.trim().toLowerCase();
-  if(!/^[a-z0-9.-]+\.[a-z]{2,}$/.test(dm)){note(m,'Tulis domain saja, contoh: kopedigitaltechnology.github.io','err');return}var u=f.url.value.trim();if(u&&!aman(u)){note(m,'Alamat situs harus diawali https://','err');return}note(m,'Menyimpan\u2026');var dv={domain:dm,aktif:f.aktif.checked,url:u,pesan:f.pesan.value.trim()};
+  if(!/^[a-z0-9.-]+\.[a-z]{2,}$/.test(dm)){note(m,'Tulis domain saja, contoh: kopedigitaltechnology.my.id','err');return}var u=f.url.value.trim();if(u&&!aman(u)){note(m,'Alamat situs harus diawali https://','err');return}note(m,'Menyimpan\u2026');var dv={domain:dm,aktif:f.aktif.checked,url:u,pesan:f.pesan.value.trim()};
   db.collection('settings').doc('verifikasi').set(dv).then(function(){verData=dv;note(m,'Tersimpan. Segarkan halaman untuk melihat hasilnya.','ok')}).catch(function(x){note(m,galat(x),'err')})};
 $('fFoot').onsubmit=function(e){e.preventDefault();var f=e.target,m=$('mFoot');note(m,'Menyimpan\u2026');
   db.collection('settings').doc('footer').set({nama:f.nama.value.trim()||FOOT_DEF.nama,slogan:f.slogan.value.trim(),hak:f.hak.value.trim()||FOOT_DEF.hak}).then(function(){note(m,'Tersimpan di server.','ok')}).catch(function(x){note(m,galat(x),'err')})};
