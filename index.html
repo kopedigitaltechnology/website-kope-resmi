@@ -26,7 +26,7 @@
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"KOPE Digital Technology","alternateName":"KOPE Technology","url":"https://kopedigitaltechnology.my.id/","logo":"https://kopedigitaltechnology.my.id/logo-kope.jpg","slogan":"Innovation for Everyone"}</script>
 <script src="tema.js"></script>
 <style>
-:root{--bg:#F5F7FB;--panel:#FFFFFF;--line:#D5DCE8;--text:#0F172A;--mute:#4B5A72;--blue:#2563EB;--cyan:#0369A1;--bad:#B91C1C;--ok:#047857;--field:#FFFFFF;--hdr:rgba(245,247,251,.95);color-scheme:light;box-sizing:border-box}
+:root{--bg:#F5F7FB;--panel:#FFFFFF;--line:#C3CCDB;--text:#0B1220;--mute:#3D4A60;--blue:#2563EB;--cyan:#075985;--bad:#B42318;--ok:#04704B;--field:#FFFFFF;--hdr:rgba(245,247,251,.95);color-scheme:light;box-sizing:border-box}
 :root[data-theme="dark"]{--bg:#080B12;--panel:#0F1522;--line:#1E2740;--text:#F4F6FB;--mute:#A1A1AA;--cyan:#22D3EE;--bad:#f87171;--ok:#22D3EE;--field:#0b1020;--hdr:rgba(8,11,18,.94);color-scheme:dark}
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-behavior:smooth;scroll-padding-top:70px}
@@ -116,6 +116,22 @@ nav button#nTema{white-space:nowrap}
 .hero{padding:64px 0 52px}.hero img{width:min(760px,100%)}h1{font-size:clamp(40px,4.2vw,60px)}.lead{font-size:18px;max-width:60ch}
 section{padding:72px 0}.grid{grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}.card{padding:22px}.sub{font-size:17px}}
 @media (min-width:1500px){.wrap{max-width:1320px}}
+:root:not([data-theme="dark"]) body{font-size:17px;line-height:1.7;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+:root:not([data-theme="dark"]) label{font-size:15.5px;font-weight:600;color:var(--text)}:root:not([data-theme="dark"]) label.setuju{font-weight:400}
+:root:not([data-theme="dark"]) .small,:root:not([data-theme="dark"]) .stat span{font-size:14.5px}
+:root:not([data-theme="dark"]) .card p,:root:not([data-theme="dark"]) .pol p,:root:not([data-theme="dark"]) .pol li,:root:not([data-theme="dark"]) .steps{font-size:16px}
+:root:not([data-theme="dark"]) .sub,:root:not([data-theme="dark"]) .lead{font-size:17.5px}
+:root:not([data-theme="dark"]) .card{box-shadow:0 1px 3px rgba(15,23,42,.08)}
+:root:not([data-theme="dark"]) nav{color:var(--text)}:root:not([data-theme="dark"]) nav a:hover,:root:not([data-theme="dark"]) nav button.lnk:hover{color:var(--blue)}
+:root:not([data-theme="dark"]) .quote{color:var(--text)}:root:not([data-theme="dark"]) .tag{font-weight:600}:root:not([data-theme="dark"]) .pol h3{color:var(--text)}
+:root:not([data-theme="dark"]) input::placeholder,:root:not([data-theme="dark"]) textarea::placeholder{color:#66738A;opacity:1}
+.ov{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(8,11,18,.62);backdrop-filter:blur(3px)}
+.ov[hidden]{display:none}
+.ovbox{width:100%;max-width:420px;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.ovbox .btn{width:100%;margin-top:10px;text-align:center}
+.nantikan{margin:22px 0 0;font-weight:600;color:var(--text);border-left:3px solid var(--cyan);padding-left:14px}
+@media (prefers-reduced-motion:no-preference){.ovbox{animation:naik .18s ease-out}}
+@keyframes naik{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 </style>
 </head>
 <body>
@@ -174,20 +190,17 @@ section{padding:72px 0}.grid{grid-template-columns:repeat(auto-fill,minmax(260px
 
 <section id="beta" class="view"><div class="wrap">
 <h2>Akses uji coba beta</h2>
-<p class="sub">Aplikasi dan produk KOPE yang belum dirilis resmi bisa Anda coba lebih dulu. Daftar di sini, tunggu admin menyetujui, lalu tautan uji coba muncul di halaman ini.</p>
+<p class="sub">Aplikasi dan produk KOPE yang belum dirilis resmi bisa Anda coba lebih dulu. Masuk dengan Google, daftar, tunggu admin menyetujui, lalu tombol uji coba muncul pada aplikasi di halaman ini.</p>
 <div class="betagrid">
 <div>
+<div class="card" id="betaGate" hidden><h3>Masuk dulu</h3><p id="betaGateTeks"></p><button class="btn main" id="bGate" type="button">Masuk dengan Google</button></div>
 <div class="card" id="betaStatus" hidden></div>
-<form id="fBeta" class="card" autocomplete="on">
+<form id="fBeta" class="card" autocomplete="on" hidden>
 <h3>Daftar uji coba pengguna</h3>
 <div class="fgrid">
 <label class="full">Nama lengkap<input name="nama" required minlength="2" maxlength="80" autocomplete="name"></label>
 <label>Nomor HP<input name="hp" type="tel" inputmode="tel" required maxlength="20" autocomplete="tel" placeholder="08xxxxxxxxxx"></label>
 <label>Gmail<input name="gmail" type="email" required maxlength="120" autocomplete="email" placeholder="nama@gmail.com"></label>
-<div class="full fgrid" id="betaPwBox">
-<label>Kata sandi (minimal 8, ada huruf dan angka)<input name="pw" type="password" minlength="8" maxlength="128" autocomplete="new-password"></label>
-<label>Konfirmasi kata sandi<input name="pw2" type="password" minlength="8" maxlength="128" autocomplete="new-password"></label>
-</div>
 <label>Jenis kelamin<select name="gender" required><option value="">Pilih</option><option value="Pria">Pria</option><option value="Wanita">Wanita</option></select></label>
 <label class="full">Alamat rumah (boleh kosong)<textarea name="alamat" rows="2" maxlength="200" autocomplete="street-address"></textarea></label>
 <label class="full">Foto selfie verifikasi (foto wajah Anda sendiri, jelas, tanpa filter)<input name="foto" id="betaFoto" type="file" accept="image/*" required></label>
@@ -200,12 +213,15 @@ section{padding:72px 0}.grid{grid-template-columns:repeat(auto-fill,minmax(260px
 </form>
 </div>
 <aside class="card"><h3>Cara kerjanya</h3>
-<ol class="steps"><li>Isi formulir dan unggah foto selfie.</li><li>Admin memeriksa permintaan Anda.</li><li>Jika disetujui, tautan uji coba muncul di halaman ini. Selama menunggu, status Anda tertera di sini.</li></ol>
+<ol class="steps"><li>Masuk dengan akun Google, isi formulir, dan unggah foto selfie.</li><li>Admin memeriksa permintaan Anda.</li><li>Jika disetujui, tombol uji coba muncul pada kartu aplikasi di halaman ini. Selama menunggu, status Anda tertera di sini.</li></ol>
 <h3>Privasi</h3>
 <p class="small">Kami mengumpulkan data Anda untuk menjaga situs dari virus dan dari orang yang mencoba mengakses perusahaan tanpa izin. Foto selfie dihapus otomatis dari server setelah admin memutuskan.</p>
-<p class="small">Kata sandi dikelola Firebase. Tidak ada orang yang bisa melihatnya, termasuk admin.</p>
+<p class="small">Anda masuk memakai akun Google. Kata sandi Google Anda tidak pernah sampai ke KOPE.</p>
 </aside>
 </div>
+<h3 style="margin-top:36px">Aplikasi yang sedang uji coba</h3>
+<div id="betaApps" class="grid"></div>
+<p class="nantikan">Nantikan fitur uji coba lainnya dari KOPE Digital Technology.</p>
 </div></section>
 
 <section id="profil" class="view"><div class="wrap">
@@ -293,10 +309,7 @@ section{padding:72px 0}.grid{grid-template-columns:repeat(auto-fill,minmax(260px
 </div>
 
 <div id="a-beta" class="at" hidden>
-<form id="fBetaCfg" class="card" style="max-width:640px;margin-bottom:18px"><p class="small">Tautan ini hanya terlihat oleh peserta yang sudah Anda setujui. Disimpan di server, bukan di kode halaman.</p>
-<label>Tautan uji coba (https://)<input name="link" type="url" maxlength="300" placeholder="https://..."></label>
-<label>Catatan untuk peserta (boleh kosong)<textarea name="info" rows="2" maxlength="300"></textarea></label>
-<button class="btn main" type="submit">Simpan tautan</button><div id="mBetaCfg" role="status"></div></form>
+<p class="small" style="max-width:640px">Aplikasi uji coba dan tautannya diatur di tab Produk: tekan <strong>Jadikan uji coba beta</strong> pada produk. Kalau aplikasi sudah rilis penuh, tekan <strong>Rilis penuh</strong> dan aplikasi pindah ke menu Produk.</p>
 <h3>Pendaftar uji coba</h3><div id="aListBeta"><p class="ph">Memuat…</p></div></div>
 
 <div id="a-req" class="at" hidden><div id="aListReq"></div></div>
@@ -353,6 +366,16 @@ section{padding:72px 0}.grid{grid-template-columns:repeat(auto-fill,minmax(260px
 <button class="btn main" type="submit">Simpan verifikasi</button><div id="mVer" role="status"></div></form></div>
 <div id="a-set" class="at" hidden>
 <h3>Pengaturan keamanan</h3>
+<form id="fAc" class="card" style="max-width:640px;margin-bottom:18px">
+<h3>Firebase App Check (reCAPTCHA v3)</h3>
+<p class="small" id="acInfo">Memuat…</p>
+<p class="small">Isi hanya <strong>Site Key</strong> (kunci publik). <strong>Secret Key</strong> jangan ditaruh di sini atau di kode. Tempel Secret Key di Firebase Console, App Check, aplikasi web, reCAPTCHA v3. Hanya admin yang bisa menyimpan atau menghapus Site Key.</p>
+<label>Site Key reCAPTCHA v3<input name="sitekey" maxlength="80" autocomplete="off" spellcheck="false"></label>
+<label class="setuju"><input type="checkbox" name="yakin"><span>Saya yakin ini Site Key, bukan Secret Key.</span></label>
+<div class="acts"><button class="btn main" type="submit">Simpan Site Key</button><button class="btn" type="button" id="bAcHapus">Hapus Site Key</button></div>
+<div id="mAc" role="status"></div>
+<p class="small">Penting: kalau Site Key hanya disimpan di sini, jangan tekan Enforce untuk Firestore di Firebase Console. Kunci dibaca dari database yang sama, jadi pengunjung baru bisa gagal memuat data. Untuk perlindungan penuh (Enforce), isi juga <code>APPCHECK_SITE_KEY</code> di app.js. Site Key bersifat publik, bukan rahasia.</p>
+</form>
 <div class="card" style="overflow-x:auto;margin-bottom:18px"><table style="width:100%;border-collapse:collapse;font-size:14px">
 <tr><th align="left" style="padding:8px 6px">Bagian</th><th align="left" style="padding:8px 6px">Status</th></tr>
 <tr><td style="padding:8px 6px;border-top:1px solid var(--line)">GitHub Public</td><td style="padding:8px 6px;border-top:1px solid var(--line)">Aman untuk website. Jangan taruh kata sandi di file.</td></tr>
@@ -365,6 +388,7 @@ section{padding:72px 0}.grid{grid-template-columns:repeat(auto-fill,minmax(260px
 <tr><td style="padding:8px 6px;border-top:1px solid var(--line)">Privasi pelanggan</td><td style="padding:8px 6px;border-top:1px solid var(--line)">Kebijakan privasi tersedia, persetujuan diminta, pelanggan bisa menghapus data sendiri.</td></tr>
 <tr><td style="padding:8px 6px;border-top:1px solid var(--line)">Lencana centang biru</td><td style="padding:8px 6px;border-top:1px solid var(--line)">Hanya tampil di situs resmi. Status disimpan di server Firebase.</td></tr>
 <tr><td style="padding:8px 6px;border-top:1px solid var(--line)">Perlindungan halaman</td><td style="padding:8px 6px;border-top:1px solid var(--line)">Aktif: pembatas sumber skrip (CSP), blokir bingkai, batas percobaan masuk, keluar otomatis admin 30 menit.</td></tr>
+<tr><td style="padding:8px 6px;border-top:1px solid var(--line)">Firebase App Check</td><td style="padding:8px 6px;border-top:1px solid var(--line)">Site Key disimpan di server oleh admin. Secret Key hanya di Firebase Console, tidak pernah di kode.</td></tr>
 <tr><td style="padding:8px 6px;border-top:1px solid var(--line)">Uji coba beta</td><td style="padding:8px 6px;border-top:1px solid var(--line)">Data dan selfie hanya bisa dibaca pemilik dan admin. Selfie wajib terhapus saat admin memutuskan (dipaksa oleh Security Rules).</td></tr>
 <tr><td style="padding:8px 6px;border-top:1px solid var(--line)">Backup database</td><td style="padding:8px 6px;border-top:1px solid var(--line)">Manual. Unduh cadangan secara berkala, misalnya seminggu sekali.</td></tr>
 </table></div>
@@ -374,6 +398,14 @@ section{padding:72px 0}.grid{grid-template-columns:repeat(auto-fill,minmax(260px
 </div>
 </div></section>
 </main>
+<div id="ovLogin" class="ov" role="dialog" aria-modal="true" aria-labelledby="ovJudul" hidden>
+<div class="card ovbox">
+<h3 id="ovJudul">Masuk untuk daftar uji coba</h3>
+<p class="small">Untuk mendaftar uji coba beta, masuk dulu dengan akun Google (Gmail) Anda. Kata sandi Google Anda tidak pernah sampai ke KOPE.</p>
+<button class="btn main" id="ovGoogle" type="button">Masuk dengan Google</button>
+<button class="btn" id="ovTutup" type="button">Nanti saja</button>
+<div id="mOv" role="status"></div>
+</div></div>
 
 <footer><div class="wrap"><div id="sosialBox" class="btns" style="justify-content:flex-start;margin-bottom:12px"></div><a href="#privasi" style="text-decoration:underline">Kebijakan Privasi</a><br><strong id="footBrand" class="nocopy" style="color:var(--text)"></strong><br><span id="footSlogan" class="nocopy"></span><br><span id="footCopy" class="nocopy"></span></div></footer>
 

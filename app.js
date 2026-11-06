@@ -5,6 +5,7 @@ var firebaseConfig = {
   projectId: "kope-digital-technology",
   appId: "1:957517114720:web:1076ea32640f4de9dc4205"
 };
+var acAktif=false,acSumber='';
 var APPCHECK_SITE_KEY = ""; // isi dengan site key reCAPTCHA v3 dari Firebase Console > App Check. Kosong = App Check belum aktif.
 var ADMIN_EMAIL = "kopedigitaltechnology@gmail.com"; // hanya email ini yang menjadi admin
 var co={}; // data perusahaan diambil dari server (Firestore: settings/company)
@@ -70,7 +71,8 @@ if(firebaseConfig.apiKey.indexOf('ISI')===0){
   $('warn').style.display='block';$('daftarProduk').innerHTML='';$('daftarProduk').appendChild(el('p','ph','Produk muncul setelah Firebase diisi.'));route();
 }else{
   firebase.initializeApp(firebaseConfig);
-  if(APPCHECK_SITE_KEY){try{firebase.appCheck().activate(APPCHECK_SITE_KEY,true)}catch(e){}}auth=firebase.auth();db=firebase.firestore();
+  aktifkanAc(APPCHECK_SITE_KEY,'kode');try{aktifkanAc(localStorage.getItem('kope-ack'),'cache')}catch(e){}auth=firebase.auth();db=firebase.firestore();
+  db.collection('settings').doc('appcheck').get().then(function(d){var k=d.exists?d.data().siteKey:'';if(ackOk(k)){try{localStorage.setItem('kope-ack',k)}catch(e){}aktifkanAc(k,'server')}else{try{localStorage.removeItem('kope-ack')}catch(e){}}}).catch(function(){});
   mulai=function(){if(started)return;started=true;
   db.collection('home').onSnapshot(function(s){home=s.docs.map(function(d){var x=d.data();x.id=d.id;return x});renderHome();if($('p-admin').classList.contains('on'))loadHome()},function(){});
   db.collection('settings').doc('footer').onSnapshot(function(d){foot=d.exists?d.data():{};renderFooter()},function(){renderFooter()});
@@ -78,7 +80,7 @@ if(firebaseConfig.apiKey.indexOf('ISI')===0){
   db.collection('settings').doc('company').onSnapshot(function(d){co=d.exists?d.data():{};renderKontak()},function(){});
   db.collection('settings').doc('cerita').onSnapshot(function(d){cerita=d.exists?d.data():{};renderCerita();if($('p-admin').classList.contains('on'))fillIsi()},function(){});
   db.collection('settings').doc('beranda').onSnapshot(function(d){beranda=d.exists?d.data():{};renderBeranda();if($('p-admin').classList.contains('on'))fillIsi()},function(){});
-  db.collection('products').onSnapshot(function(s){produk=s.docs.map(function(d){var x=d.data();x.id=d.id;return x});renderProduk();if($('detail').classList.contains('on'))openDetail();if($('p-admin').classList.contains('on'))loadAdmin()},function(){$('daftarProduk').textContent='Produk belum bisa dimuat.'});
+  db.collection('products').onSnapshot(function(s){produk=s.docs.map(function(d){var x=d.data();x.id=d.id;return x});renderProduk();renderBetaApps();if($('detail').classList.contains('on'))openDetail();if($('p-admin').classList.contains('on'))loadAdmin()},function(){$('daftarProduk').textContent='Produk belum bisa dimuat.'});
   };
   auth.onAuthStateChanged(function(u){user=u;isAdmin=!!u&&u.emailVerified&&(u.email||'').toLowerCase()===ADMIN_EMAIL;if(isAdmin)mulai();afterAuth()});
   db.collection('settings').doc('verifikasi').get().then(function(d){verData=d.exists?d.data():{};resmi=verData.aktif===true&&verData.domain===location.hostname;document.body.classList.toggle('resmiOk',resmi);if(resmi)mulai();else tampilPalsu(!d.exists?'belum-diatur':verData.aktif!==true?'tidak-aktif':'domain-beda')}).catch(function(){tampilPalsu('akses-ditolak')});
@@ -92,6 +94,7 @@ function resetIdle(){clearTimeout(idle);if(isAdmin)idle=setTimeout(function(){au
 ['click','keydown','touchstart'].forEach(function(ev){document.addEventListener(ev,resetIdle,{passive:true})});
 function afterAuth(){
   resetIdle();
+  if(user&&!$('ovLogin').hidden)tutupOv();
   $('verif').style.display=(user&&!user.emailVerified&&(user.email||'').toLowerCase()===ADMIN_EMAIL)?'block':'none';
   $('nPesanan').hidden=!user;$('nAdmin').hidden=!isAdmin;$('nMasuk').hidden=!!user;$('nKeluar').hidden=!user;
   $('fLayanan').hidden=!user;$('layananLogin').hidden=!!user;
@@ -135,10 +138,10 @@ function renderProduk(){
   l.forEach(function(p){
     var c=el('div','card');
     if(p.img){var i=document.createElement('img');i.src=p.img;i.alt=p.name;i.loading='lazy';c.appendChild(i)}
-    var proses=p.status==='proses'||p.concept;c.appendChild(el('span','tag',proses?'Dalam pengembangan':(p.cat||'Produk')));
+    var proses=p.status==='proses'||p.concept;c.appendChild(el('span','tag',p.beta===true?'Uji coba beta':(proses?'Dalam pengembangan':(p.cat||'Produk'))));
     c.appendChild(el('h3','',p.name));
     if(p.desc)c.appendChild(el('p','',p.desc));
-    var ln=aman(p.link),b;
+    var ln=p.beta===true?'':aman(p.link),b;
     if(ln){b=el('a','btn main sm','Buka');b.href=ln;b.target='_blank';b.rel='noopener noreferrer'}
     else{b=el('button','btn main sm',proses?'Segera hadir':'Belum ada tautan');b.disabled=true}
     c.appendChild(b);var dt=el('a','btn sm','Detail & ulasan');dt.href='#p/'+p.id;dt.style.marginLeft='8px';c.appendChild(dt);box.appendChild(c)});
@@ -184,7 +187,7 @@ function openDetail(){
   r.appendChild(el('span','tag',proses?'Dalam pengembangan':(p.cat||'Produk')));r.appendChild(el('h2','',p.name));
   var sm=el('div','small');sm.id='dStar';r.appendChild(sm);
   r.appendChild(el('p','',p.desc||'Belum ada deskripsi.'));r.lastChild.style.whiteSpace='pre-line';
-  var ln=aman(p.link),a;if(ln){a=el('a','btn main','Buka produk');a.href=ln;a.target='_blank';a.rel='noopener noreferrer'}else{a=el('button','btn main',proses?'Segera hadir':'Belum ada tautan');a.disabled=true}
+  var ln=p.beta===true?'':aman(p.link),a;if(ln){a=el('a','btn main','Buka produk');a.href=ln;a.target='_blank';a.rel='noopener noreferrer'}else{a=el('button','btn main',proses?'Segera hadir':'Belum ada tautan');a.disabled=true}
   r.appendChild(a);g.appendChild(r);b.appendChild(g);
   if(revId!==curId){if(revUn)revUn();revs=[];revId=curId;
     revUn=db.collection('products').doc(curId).collection('reviews').onSnapshot(function(s){revs=s.docs.map(function(d){var x=d.data();x.id=d.id;return x}).sort(byDate);renderRev()},function(){$('revSum').textContent='Ulasan belum bisa dimuat.'})}
@@ -252,7 +255,7 @@ document.querySelectorAll('.tabs .btn').forEach(function(b){b.onclick=function()
   document.querySelectorAll('.at').forEach(function(a){a.hidden=a.id!==b.dataset.t})}});
 function statusSel(list,cur,fn){var s=document.createElement('select');s.style.width='auto';list.forEach(function(v){var o=el('option','',v);o.value=v;if(v===cur)o.selected=true;s.appendChild(o)});s.onchange=function(){fn(s.value)};return s}
 $('bBackup').onclick=function(){var m=$('mBackup');note(m,'Menyiapkan cadangan\u2026');
-  var names=['products','requests','subs','settings','home','beta_requests','beta_config'];
+  var names=['products','requests','subs','settings','home','beta_requests','beta_links'];
   function rapi(s){return s.docs.map(function(d){var x=d.data();x.id=d.id;Object.keys(x).forEach(function(k){if(x[k]&&x[k].toDate)x[k]=x[k].toDate().toISOString()});return x})}
   Promise.all(names.map(function(n){return db.collection(n).get().then(rapi)})).then(function(r){
     var out={dibuat:new Date().toISOString(),versi:2};names.forEach(function(n,i){out[n]=r[i]});
@@ -270,20 +273,20 @@ function loadSubs(){db.collection('subs').orderBy('due').get().then(function(s){
     var r=el('div','item row'),i=el('div');i.appendChild(el('strong','',o.cust+' ('+(o.plan==='tahun'?'tahunan':'bulanan')+')'));i.appendChild(el('div','small',(o.site||'-')+' \u00b7 jatuh tempo '+o.due));var sp=el('div','',st);if(bad)sp.style.color='var(--bad)';i.appendChild(sp);r.appendChild(i);
     var w=el('div','row'),pj=el('button','btn sm','Perpanjang');pj.onclick=function(){var t=new Date(o.due+'T00:00:00Z');if(o.plan==='tahun')t.setUTCFullYear(t.getUTCFullYear()+1);else t.setUTCMonth(t.getUTCMonth()+1);d.ref.update({due:tglIso(t)}).then(loadSubs)};
     var h=el('button','btn sm','Hapus');h.onclick=function(){if(confirm('Hapus catatan ini?'))d.ref.delete().then(loadSubs)};w.appendChild(pj);w.appendChild(h);r.appendChild(w);L.appendChild(r)})}).catch(function(){$('aListSub').textContent='Tidak bisa memuat.'})}
-function loadAdmin(){loadHome();loadSubs();fillIsi();loadBetaAdmin();var ff=$('fFoot');if(document.activeElement!==ff.nama){var d=Object.assign({},FOOT_DEF,foot);ff.nama.value=d.nama;ff.slogan.value=d.slogan;ff.hak.value=d.hak}
+function loadAdmin(){loadHome();loadSubs();fillIsi();loadBetaAdmin();loadAc();var ff=$('fFoot');if(document.activeElement!==ff.nama){var d=Object.assign({},FOOT_DEF,foot);ff.nama.value=d.nama;ff.slogan.value=d.slogan;ff.hak.value=d.hak}
   var fv=$('fVer');if(document.activeElement!==fv.domain){fv.domain.value=verData.domain||location.hostname;fv.aktif.checked=verData.aktif===true;fv.url.value=verData.url||'https://kopedigitaltechnology.my.id/';fv.pesan.value=verData.pesan||'Situs ini tidak terverifikasi sebagai situs resmi KOPE Technology, jadi data tidak ditampilkan.'}
   var fc=$('fCo');['nama','alamat','email','telepon','wa','jam','maps','hargaBulan','hargaTahun'].forEach(function(k){if(document.activeElement!==fc[k])fc[k].value=co[k]||''});
   $('sAuth').textContent=user?'Aktif (email dan Google)':'Belum masuk';
   $('sHttps').textContent=location.protocol==='https:'?'Aktif':'Belum aktif. Buka lewat alamat https://';
   var L=$('aListProduk');L.innerHTML='';
-  produk.forEach(function(p){var r=el('div','item row');r.appendChild(el('div','',p.name+(p.link?' — ada link':' — belum ada link')+(p.active===false?' (disembunyikan)':'')));
+  produk.forEach(function(p){var r=el('div','item row');r.appendChild(el('div','',p.name+(p.beta===true?' (uji coba beta)':'')+(p.link?' — ada link':' — belum ada link')+(p.active===false?' (disembunyikan)':'')));
     var w=el('div','row');
     var t=el('button','btn sm',p.active===false?'Tampilkan':'Sembunyikan');t.onclick=function(){db.collection('products').doc(p.id).update({active:p.active===false})};
     var d=el('button','btn sm','Hapus');d.onclick=function(){if(confirm('Hapus produk ini?'))db.collection('products').doc(p.id).delete()};
     var st=statusSel(['Tersedia','Dalam pengembangan'],(p.status==='proses'||p.concept)?'Dalam pengembangan':'Tersedia',function(v){db.collection('products').doc(p.id).update({status:v==='Tersedia'?'siap':'proses',concept:false})});
     var lk=el('button','btn sm',p.link?'Ubah link':'Pasang link');
     lk.onclick=function(){var u=prompt('Tempel tautan produk (https://...). Kosongkan untuk menghapus.',p.link||'');if(u===null)return;u=u.trim();var a=u?aman(u):'';if(u&&!a){alert('Tautan harus diawali https://');return}db.collection('products').doc(p.id).update({link:a})};
-    w.appendChild(st);w.appendChild(lk);w.appendChild(t);w.appendChild(d);r.appendChild(w);L.appendChild(r)});
+    w.appendChild(st);w.appendChild(lk);betaTombol(p,w);w.appendChild(t);w.appendChild(d);r.appendChild(w);L.appendChild(r)});
   db.collection('requests').orderBy('createdAt','desc').limit(100).get().then(function(s){fill($('aListReq'),s,function(o){
     var c=el('div','item');c.appendChild(el('strong','',o.service+' — '+o.name));
     c.appendChild(el('div','small',tgl(o.createdAt)+' · '+o.email+(o.budget?' · Anggaran: '+o.budget:'')));
@@ -352,7 +355,20 @@ document.querySelectorAll('.nocopy').forEach(function(n){n.addEventListener('cop
 route();
 
 /* ============ UJI COBA BETA ============ */
-var betaBusy=false,betaLast=0,betaImg='',STB={menunggu:'Menunggu persetujuan',disetujui:'Disetujui',ditolak:'Ditolak'};
+var betaBusy=false,betaLast=0,betaImg='',betaOk=false,betaLinks={},ovAuto=false,ovFokus=null,STB={menunggu:'Menunggu persetujuan',disetujui:'Disetujui',ditolak:'Ditolak'};
+function adaGoogle(){return !!user&&(user.providerData||[]).some(function(p){return p&&p.providerId==='google.com'})}
+/* overlay masuk Google */
+function bukaOv(){$('mOv').textContent='';$('mOv').className='';ovFokus=document.activeElement;$('ovLogin').hidden=false;document.body.style.overflow='hidden';$('ovGoogle').focus()}
+function tutupOv(){$('ovLogin').hidden=true;document.body.style.overflow='';if(ovFokus&&ovFokus.focus)ovFokus.focus()}
+$('ovTutup').onclick=tutupOv;
+$('ovLogin').onclick=function(e){if(e.target===this)tutupOv()};
+document.addEventListener('keydown',function(e){if($('ovLogin').hidden)return;
+  if(e.key==='Escape'){tutupOv();return}
+  if(e.key==='Tab'){var a=$('ovGoogle'),b=$('ovTutup');if(e.shiftKey&&document.activeElement===a){e.preventDefault();b.focus()}else if(!e.shiftKey&&document.activeElement===b){e.preventDefault();a.focus()}}});
+$('ovGoogle').onclick=function(){var m=$('mOv');if(!auth){note(m,'Layanan belum siap.','err');return}note(m,'Membuka Google\u2026');
+  auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(function(){tutupOv()})
+  .catch(function(x){var c=x&&x.code||'';note(m,c==='auth/popup-blocked'?'Pop-up diblokir browser. Izinkan pop-up lalu coba lagi.':c.indexOf('account-exists')>=0?'Gmail ini sudah dipakai untuk akun email dan kata sandi. Hubungi admin.':c==='auth/popup-closed-by-user'||c==='auth/cancelled-popup-request'?'Masuk dibatalkan.':'Masuk dengan Google gagal. Coba lagi.','err')})};
+$('bGate').onclick=bukaOv;
 /* Foto diperkecil dan dikodekan ulang jadi JPEG (membuang data lokasi/EXIF), hasilnya base64 tanpa awalan */
 function selfieKecil(file){return new Promise(function(ok,gagal){
   if(!file||!/^image\//.test(file.type)){gagal(new Error('tipe'));return}
@@ -369,10 +385,8 @@ function selfieKecil(file){return new Promise(function(ok,gagal){
     im.src=r.result};
   r.readAsDataURL(file)})}
 function betaGalat(x){var c=x&&x.code||'';
-  if(c.indexOf('email-already')>=0){balik='beta';return 'Gmail ini sudah terdaftar. Masuk dulu lewat menu Masuk, lalu kembali ke halaman ini.'}
-  if(c.indexOf('weak-password')>=0)return 'Kata sandi terlalu lemah.';
   if(c.indexOf('too-many')>=0)return 'Terlalu banyak percobaan. Coba lagi nanti.';
-  if(c.indexOf('permission')>=0)return 'Ditolak server. Pastikan Anda memakai Gmail dan belum pernah mendaftar. Jika terus gagal, hubungi admin.';
+  if(c.indexOf('permission')>=0)return 'Ditolak server. Pastikan Anda masuk dengan Google (Gmail) dan belum pernah mendaftar. Jika terus gagal, hubungi admin.';
   return 'Gagal mengirim. Periksa koneksi lalu coba lagi.'}
 $('betaFoto').onchange=function(){var inp=this,f=inp.files[0],m=$('mBeta'),p=$('betaPrev');betaImg='';p.hidden=true;if(!f)return;
   note(m,'Memproses foto\u2026');
@@ -380,57 +394,65 @@ $('betaFoto').onchange=function(){var inp=this,f=inp.files[0],m=$('mBeta'),p=$('
   .catch(function(x){inp.value='';note(m,x&&x.message==='besar'?'Foto terlalu besar. Pilih foto lain.':'Foto tidak bisa dibaca. Pakai foto JPG atau PNG.','err')})};
 $('betaSetuju').onchange=function(){$('bBeta').disabled=!this.checked||betaBusy};
 $('fBeta').onsubmit=function(e){e.preventDefault();var f=e.target,m=$('mBeta');
-  if(!auth){note(m,'Layanan belum siap. Coba lagi nanti.','err');return}
+  if(!auth||!db){note(m,'Layanan belum siap. Coba lagi nanti.','err');return}
   if(f.website.value){note(m,'Permintaan terkirim.','ok');return}
+  if(!adaGoogle()){bukaOv();return}
   if(betaBusy)return;
   if(Date.now()-betaLast<30000){note(m,'Tunggu sebentar sebelum mengirim lagi.','err');return}
-  var nama=f.nama.value.trim(),hp=f.hp.value.replace(/[\s().-]/g,''),em=(user?user.email:f.gmail.value).trim().toLowerCase(),al=f.alamat.value.trim();
+  var nama=f.nama.value.trim(),hp=f.hp.value.replace(/[\s().-]/g,''),em=(user.email||'').trim().toLowerCase(),al=f.alamat.value.trim();
   if(nama.length<2||nama.length>80){note(m,'Isi nama lengkap Anda.','err');return}
   if(!/^\+?[0-9]{9,15}$/.test(hp)){note(m,'Nomor HP tidak valid. Pakai angka saja, contoh 08123456789.','err');return}
   if(!/^[a-z0-9._%+-]+@gmail\.com$/.test(em)){note(m,'Uji coba beta hanya untuk akun Gmail (nama@gmail.com).','err');return}
   if(!f.gender.value){note(m,'Pilih jenis kelamin.','err');return}
-  if(!user){var pw=f.pw.value;
-    if(pw.length<8||!/[A-Za-z]/.test(pw)||!/[0-9]/.test(pw)){note(m,'Kata sandi minimal 8 karakter dan memuat huruf serta angka.','err');return}
-    if(pw!==f.pw2.value){note(m,'Konfirmasi kata sandi tidak sama.','err');return}}
   if(!betaImg){note(m,'Unggah foto selfie dulu.','err');return}
   if(!$('betaSetuju').checked){note(m,'Centang persetujuan kebijakan privasi dulu.','err');return}
   betaBusy=true;$('bBeta').disabled=true;note(m,'Mengirim\u2026');
-  var buat=user?Promise.resolve(user):auth.createUserWithEmailAndPassword(em,f.pw.value).then(function(c){var u=c.user;
-    return u.updateProfile({displayName:nama}).catch(function(){}).then(function(){u.sendEmailVerification().catch(function(){});return u})});
-  buat.then(function(u){return u.reload().catch(function(){}).then(function(){return u.getIdToken(true)}).then(function(){return u})})
-  .then(function(u){var ts=firebase.firestore.FieldValue.serverTimestamp(),b=db.batch();
+  user.reload().catch(function(){}).then(function(){return user.getIdToken(true)})
+  .then(function(){var u=user,ts=firebase.firestore.FieldValue.serverTimestamp(),b=db.batch();
     var r={uid:u.uid,name:nama,phone:hp,email:u.email,gender:f.gender.value,consent:true,status:'menunggu',hasSelfie:true,emailVerified:u.emailVerified===true,createdAt:ts};
     if(al)r.address=al;
     b.set(db.collection('beta_selfies').doc(u.uid),{uid:u.uid,img:betaImg,mime:'image/jpeg',createdAt:ts});
     b.set(db.collection('beta_requests').doc(u.uid),r);
     return b.commit()})
   .then(function(){betaLast=Date.now();betaImg='';f.reset();$('betaPrev').hidden=true;note(m,'');betaBusy=false;loadBeta()})
-  .catch(function(x){betaBusy=false;$('bBeta').disabled=!$('betaSetuju').checked;note(m,betaGalat(x),'err');loadBeta()})};
+  .catch(function(x){betaBusy=false;$('bBeta').disabled=!$('betaSetuju').checked;note(m,betaGalat(x),'err')})};
 function betaHapus(uid,sesudah){var b=db.batch();b.delete(db.collection('beta_requests').doc(uid));b.delete(db.collection('beta_selfies').doc(uid));return b.commit().then(sesudah)}
 function loadBeta(){if(!db||betaBusy)return;
-  var st=$('betaStatus'),fm=$('fBeta');
-  $('betaPwBox').hidden=!!user;fm.pw.required=!user;fm.pw2.required=!user;fm.gmail.readOnly=!!user;
-  if(!user){st.hidden=true;fm.hidden=false;return}
-  fm.gmail.value=user.email||'';if(!fm.nama.value)fm.nama.value=user.displayName||'';
+  var st=$('betaStatus'),fm=$('fBeta'),gt=$('betaGate');betaOk=false;
+  if(!adaGoogle()){st.hidden=true;fm.hidden=true;gt.hidden=false;betaLinks={};
+    $('betaGateTeks').textContent=user?'Uji coba beta hanya untuk akun Google. Keluar dari akun ini, lalu masuk dengan Google.':'Masuk dengan akun Google dulu untuk mendaftar uji coba beta.';
+    renderBetaApps();if(!user&&!ovAuto){ovAuto=true;bukaOv()}return}
+  gt.hidden=true;fm.gmail.value=user.email||'';if(!fm.nama.value)fm.nama.value=user.displayName||'';
   db.collection('beta_requests').doc(user.uid).get().then(function(d){
-    if(!d.exists){st.hidden=true;fm.hidden=false;return}
-    fm.hidden=true;st.hidden=false;betaStatus(d.data(),st)}).catch(function(){st.hidden=true;fm.hidden=false})}
+    if(!d.exists){st.hidden=true;fm.hidden=false;renderBetaApps();return}
+    var o=d.data();betaOk=o.status==='disetujui';fm.hidden=true;st.hidden=false;betaStatus(o,st);renderBetaApps()})
+  .catch(function(){st.hidden=true;fm.hidden=false;renderBetaApps()})}
 function betaStatus(o,box){box.innerHTML='';box.appendChild(el('h3','','Status uji coba beta'));
-  var c=el('span','chip '+(o.status==='disetujui'?'yes':o.status==='ditolak'?'no':''),STB[o.status]||o.status);box.appendChild(c);
+  box.appendChild(el('span','chip '+(o.status==='disetujui'?'yes':o.status==='ditolak'?'no':''),STB[o.status]||o.status));
   box.appendChild(el('p','small','Atas nama '+o.name+' \u00b7 dikirim '+tgl(o.createdAt)));
   if(user&&!user.emailVerified){var v=el('p','small','Email Anda belum diverifikasi. Buka kotak masuk Gmail, tekan tautan dari Firebase, lalu muat ulang halaman ini. ');
     var vb=el('button','btn sm','Kirim ulang email');vb.type='button';vb.onclick=function(){user.sendEmailVerification().then(function(){alert('Email verifikasi dikirim.')}).catch(function(){alert('Coba lagi beberapa menit lagi.')})};v.appendChild(vb);box.appendChild(v)}
   if(o.status==='menunggu')box.appendChild(el('p','','Permintaan Anda sedang diperiksa admin. Cek lagi nanti di halaman ini.'));
   if(o.status==='ditolak')box.appendChild(el('p','','Permintaan ini belum bisa kami setujui. Anda bisa menghapusnya lalu mendaftar lagi dengan data yang benar.'));
-  if(o.status==='disetujui'){var z=el('div');box.appendChild(z);
-    db.collection('beta_config').doc('akses').get().then(function(s){var x=s.exists?s.data():{},u=aman(x.link||'');
-      if(u){z.appendChild(el('p','','Permintaan Anda disetujui. Ini tautan uji coba Anda:'));var a=el('a','btn main','Buka uji coba beta');a.href=u;a.target='_blank';a.rel='noopener noreferrer';z.appendChild(a)}
-      else z.appendChild(el('p','','Permintaan Anda disetujui. Tautan uji coba belum diisi admin, cek lagi nanti.'));
-      if(x.info)z.appendChild(el('p','small',x.info))}).catch(function(){z.appendChild(el('p','small','Tautan belum bisa dimuat. Coba muat ulang halaman.'))})}
+  if(o.status==='disetujui')box.appendChild(el('p','','Permintaan Anda disetujui. Tombol uji coba ada pada kartu aplikasi di bawah.'));
   var h=el('button','btn sm','Hapus permintaan saya');h.type='button';h.style.marginTop='14px';
   h.onclick=function(){if(confirm('Hapus permintaan uji coba Anda? Foto selfie ikut terhapus dari server.'))betaHapus(user.uid,loadBeta).catch(function(){alert('Gagal menghapus. Coba lagi.')})};box.appendChild(h)}
+/* daftar aplikasi yang sedang uji coba (produk bertanda beta). Tautan hanya dimuat untuk peserta yang disetujui. */
+function renderBetaApps(){var b=$('betaApps');if(!b)return;b.innerHTML='';
+  var l=produk.filter(function(p){return p.beta===true&&p.active!==false});
+  if(!l.length){b.appendChild(el('p','ph','Belum ada aplikasi yang dibuka untuk uji coba.'));return}
+  l.forEach(function(p){var c=el('div','card');
+    if(p.img){var i=document.createElement('img');i.src=p.img;i.alt=p.name;i.loading='lazy';c.appendChild(i)}
+    c.appendChild(el('span','tag','Uji coba beta'));c.appendChild(el('h3','',p.name));if(p.desc)c.appendChild(el('p','',p.desc));
+    var u=betaOk?aman((betaLinks[p.id]||{}).link||''):'';
+    if(u){var a=el('a','btn main sm','Buka uji coba');a.href=u;a.target='_blank';a.rel='noopener noreferrer';c.appendChild(a)}
+    else c.appendChild(el('p','small',betaOk?'Tautan belum tersedia, cek lagi nanti.':'Tombol uji coba muncul setelah permintaan Anda disetujui admin.'));
+    b.appendChild(c)});
+  betaAmbil()}
+function betaAmbil(){if(!betaOk||!db)return;var perlu=produk.filter(function(p){return p.beta===true&&!(p.id in betaLinks)});if(!perlu.length)return;
+  Promise.all(perlu.map(function(p){return db.collection('beta_links').doc(p.id).get().then(function(d){betaLinks[p.id]=d.exists?d.data():{}}).catch(function(){betaLinks[p.id]={}})})).then(renderBetaApps)}
 
-/* --- admin: uji coba beta --- */
+/* --- admin: pendaftar uji coba --- */
 function betaPutus(o,st){if(!confirm((st==='disetujui'?'Terima':'Tolak')+' '+o.name+'? Foto selfie akan dihapus permanen dari server.'))return;
   var b=db.batch();b.update(db.collection('beta_requests').doc(o.id),{status:st,hasSelfie:false,decidedAt:firebase.firestore.FieldValue.serverTimestamp()});
   b.delete(db.collection('beta_selfies').doc(o.id));b.commit().then(loadBetaAdmin).catch(function(){alert('Gagal. Coba lagi.')})}
@@ -448,10 +470,33 @@ function drawBeta(o){var c=el('div','item'),t=el('div','row'),h=el('div');h.appe
   if(o.status!=='ditolak'){var no=el('button','btn sm','Tolak');no.type='button';no.onclick=function(){betaPutus(o,'ditolak')};a.appendChild(no)}
   var hp=el('button','btn sm','Hapus');hp.type='button';hp.onclick=function(){if(confirm('Hapus permintaan ini beserta foto selfie-nya?'))betaHapus(o.id,loadBetaAdmin).catch(function(){alert('Gagal. Coba lagi.')})};a.appendChild(hp);
   c.appendChild(a);return c}
-function loadBetaAdmin(){var L=$('aListBeta'),fc=$('fBetaCfg');if(!L||!db||!isAdmin)return;
-  db.collection('beta_config').doc('akses').get().then(function(c){var x=c.exists?c.data():{};if(document.activeElement!==fc.link)fc.link.value=x.link||'';if(document.activeElement!==fc.info)fc.info.value=x.info||''}).catch(function(){});
+function loadBetaAdmin(){var L=$('aListBeta');if(!L||!db||!isAdmin)return;
   db.collection('beta_requests').orderBy('createdAt','desc').limit(100).get().then(function(s){fill(L,s,drawBeta,'Belum ada pendaftar uji coba.')}).catch(function(){L.textContent='Tidak bisa memuat.'})}
-$('fBetaCfg').onsubmit=function(e){e.preventDefault();var f=e.target,m=$('mBetaCfg'),u=f.link.value.trim(),a=u?aman(u):'';
-  if(u&&!a){note(m,'Tautan harus diawali https://','err');return}
+/* --- admin: tombol di tab Produk (jadikan beta, ubah link beta, rilis penuh) --- */
+function betaTombol(p,w){var TS=function(){return firebase.firestore.FieldValue.serverTimestamp()},gagal=function(){alert('Gagal. Coba lagi.')};
+  if(p.beta!==true){var b=el('button','btn sm','Jadikan uji coba beta');b.type='button';
+    b.onclick=function(){var u=prompt('Tempel tautan uji coba beta (https://...). Hanya peserta yang disetujui bisa melihatnya. Tautan publik produk disembunyikan selama uji coba.','');if(u===null)return;var a=aman(u.trim());if(!a){alert('Tautan harus diawali https://');return}
+      var bt=db.batch();bt.set(db.collection('beta_links').doc(p.id),{link:a,info:'',updatedAt:TS()});bt.update(db.collection('products').doc(p.id),{beta:true,status:'proses',concept:false});bt.commit().catch(gagal)};
+    w.appendChild(b);return}
+  var e1=el('button','btn sm','Ubah link beta');e1.type='button';
+  e1.onclick=function(){db.collection('beta_links').doc(p.id).get().then(function(s){var u=prompt('Tautan uji coba beta (https://...):',s.exists?(s.data().link||''):'');if(u===null)return;var a=aman(u.trim());if(!a){alert('Tautan harus diawali https://');return}
+    return db.collection('beta_links').doc(p.id).set({link:a,info:'',updatedAt:TS()})}).catch(gagal)};
+  var e2=el('button','btn sm main','Rilis penuh');e2.type='button';
+  e2.onclick=function(){if(!confirm('Konfirmasi: "'+p.name+'" sudah dirilis sepenuhnya? Aplikasi akan hilang dari menu uji coba dan tampil sebagai Tersedia di menu Produk.'))return;
+    var u=prompt('Tempel tautan resmi produk (https://...) agar bisa dibuka dari menu Produk:',p.link||'');if(u===null)return;var a=aman(u.trim());if(!a){alert('Tautan harus diawali https://');return}
+    var bt=db.batch();bt.update(db.collection('products').doc(p.id),{beta:false,status:'siap',concept:false,link:a});bt.delete(db.collection('beta_links').doc(p.id));bt.commit().catch(gagal)};
+  w.appendChild(e1);w.appendChild(e2)}
+/* --- admin: Site Key reCAPTCHA v3 untuk App Check (disimpan di Firestore, hanya admin yang bisa ubah) --- */
+function ackOk(k){return typeof k==='string'&&/^6[A-Za-z0-9_-]{30,60}$/.test(k)}
+function aktifkanAc(k,s){if(acAktif||!ackOk(k))return;try{firebase.appCheck().activate(k,true);acAktif=true;acSumber=s}catch(e){}}
+function loadAc(){var i=$('acInfo');if(!i||!db)return;
+  db.collection('settings').doc('appcheck').get().then(function(d){var k=d.exists?d.data().siteKey:'';
+    i.textContent=(ackOk(k)?'Site Key tersimpan di server ('+k.slice(0,6)+'\u2026'+k.slice(-4)+').':'Belum ada Site Key di server.')+' Kunci di app.js: '+(ackOk(APPCHECK_SITE_KEY)?'terisi':'kosong')+'. Aktif di perangkat ini: '+(acAktif?'ya ('+acSumber+')':'belum')+'.'})
+  .catch(function(){i.textContent='Tidak bisa memuat status.'})}
+$('fAc').onsubmit=function(e){e.preventDefault();var f=e.target,m=$('mAc'),k=f.sitekey.value.trim();
+  if(!ackOk(k)){note(m,'Format Site Key tidak dikenali. Site Key biasanya diawali 6L dan panjangnya sekitar 40 karakter.','err');return}
+  if(!f.yakin.checked){note(m,'Centang dulu bahwa ini Site Key, bukan Secret Key.','err');return}
   note(m,'Menyimpan\u2026');
-  db.collection('beta_config').doc('akses').set({link:a,info:f.info.value.trim(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()}).then(function(){note(m,'Tersimpan di server.','ok')}).catch(function(x){note(m,galat(x),'err')})};
+  db.collection('settings').doc('appcheck').set({siteKey:k,updatedAt:firebase.firestore.FieldValue.serverTimestamp()}).then(function(){f.reset();note(m,'Site Key tersimpan di server. Berlaku saat pengunjung memuat ulang halaman.','ok');loadAc()}).catch(function(x){note(m,galat(x),'err')})};
+$('bAcHapus').onclick=function(){var m=$('mAc');if(!confirm('Hapus Site Key dari server? App Check tidak aktif lagi untuk pengunjung yang belum memakainya.'))return;
+  db.collection('settings').doc('appcheck').delete().then(function(){note(m,'Site Key dihapus.','ok');loadAc()}).catch(function(x){note(m,galat(x),'err')})};
