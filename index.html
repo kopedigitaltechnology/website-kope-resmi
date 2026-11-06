@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="google-site-verification" content="p3Z6FdpZuaSTIoPWfixzeRTRob7q_3bmyVA25gfQFEw" />
@@ -24,15 +24,17 @@
 <meta name="twitter:description" content="Solusi digital, aplikasi, website, dan teknologi modern untuk individu dan bisnis.">
 <meta name="twitter:image" content="https://kopedigitaltechnology.my.id/logo-kope.jpg">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"KOPE Digital Technology","alternateName":"KOPE Technology","url":"https://kopedigitaltechnology.my.id/","logo":"https://kopedigitaltechnology.my.id/logo-kope.jpg","slogan":"Innovation for Everyone"}</script>
+<script src="tema.js"></script>
 <style>
-:root{--bg:#080B12;--panel:#0F1522;--line:#1E2740;--text:#F4F6FB;--mute:#A1A1AA;--blue:#2563EB;--cyan:#22D3EE;--bad:#f87171;box-sizing:border-box}
+:root{--bg:#F5F7FB;--panel:#FFFFFF;--line:#D5DCE8;--text:#0F172A;--mute:#4B5A72;--blue:#2563EB;--cyan:#0369A1;--bad:#B91C1C;--ok:#047857;--field:#FFFFFF;--hdr:rgba(245,247,251,.95);color-scheme:light;box-sizing:border-box}
+:root[data-theme="dark"]{--bg:#080B12;--panel:#0F1522;--line:#1E2740;--text:#F4F6FB;--mute:#A1A1AA;--cyan:#22D3EE;--bad:#f87171;--ok:#22D3EE;--field:#0b1020;--hdr:rgba(8,11,18,.94);color-scheme:dark}
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-behavior:smooth;scroll-padding-top:70px}
 body{margin:0;background:var(--bg);color:var(--text);font-family:"Plus Jakarta Sans",Inter,system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.6}
 a{color:inherit;text-decoration:none}
 :focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
 .wrap{max-width:1040px;margin:0 auto;padding:0 20px}
-header{position:sticky;top:0;z-index:5;background:rgba(8,11,18,.94);border-bottom:1px solid var(--line)}
+header{position:sticky;top:0;z-index:5;background:var(--hdr);border-bottom:1px solid var(--line)}
 header .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
 .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.06em;font-size:20px}
 .brand img{height:36px;width:auto;mix-blend-mode:lighten}
@@ -58,12 +60,12 @@ h2{font-size:clamp(23px,4vw,32px);margin:0 0 8px}h3{margin:0 0 6px;font-size:17p
 .grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px}
 .card p{margin:0 0 8px;color:var(--mute);font-size:14.5px}
-.card img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px;margin-bottom:10px;background:#0b1020}
+.card img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px;margin-bottom:10px;background:var(--field)}
 .price{font-weight:700;color:var(--text)!important}
 .tag{display:inline-block;font-size:12px;color:var(--cyan);border:1px solid var(--cyan);border-radius:99px;padding:1px 10px;margin-bottom:8px}
 .ph{font-style:italic;color:var(--mute)}
 label{display:block;font-size:14px;color:var(--mute);margin-bottom:10px}
-input,select,textarea{width:100%;padding:11px;border-radius:8px;border:1px solid var(--line);background:#0b1020;color:var(--text);font:inherit;margin-top:4px}
+input,select,textarea{width:100%;padding:11px;border-radius:8px;border:1px solid var(--line);background:var(--field);color:var(--text);font:inherit;margin-top:4px}
 .box{max-width:480px;margin:0 auto}
 .msg{padding:10px 12px;border-radius:8px;margin:10px 0;font-size:14px;border:1px solid var(--line)}
 .msg.err{color:var(--bad);border-color:var(--bad)}.msg.ok{color:var(--cyan);border-color:var(--cyan)}
@@ -82,10 +84,10 @@ footer{border-top:1px solid var(--line);padding:30px 0 90px;color:var(--mute);fo
 .pol h3{margin-top:18px}.pol p,.pol li{color:var(--mute);font-size:14.5px}
 .view{display:none}.view.on{display:block}
 .star{color:#f5b301;letter-spacing:2px}.sbtn{background:none;border:0;font-size:30px;color:#475569;cursor:pointer;padding:0 2px}.sbtn.on{color:#f5b301}
-.dgrid{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}.dgrid img{width:100%;border-radius:12px;background:#0b1020}
+.dgrid{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}.dgrid img{width:100%;border-radius:12px;background:var(--field)}
 .card.klik{cursor:pointer}.card.klik:hover{border-color:var(--cyan)}
 .quote{max-width:62ch;margin:10px auto 0;border-left:3px solid var(--cyan);padding:4px 0 4px 18px;color:var(--mute)}.quote p{margin:0 0 12px}
-.feed>*{max-width:720px;margin:0 auto 22px}.feed iframe,.feed video,.feed img{display:block;width:100%;border:0;border-radius:12px;background:#0b1020}.feed img{height:auto}
+.feed>*{max-width:720px;margin:0 auto 22px}.feed iframe,.feed video,.feed img{display:block;width:100%;border:0;border-radius:12px;background:var(--field)}.feed img{height:auto}
 .nocopy{-webkit-user-select:none;user-select:none}
 .quote h3{color:var(--text);letter-spacing:.03em;margin:0 0 10px}
 .stats{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:0 0 18px}
@@ -93,6 +95,27 @@ footer{border-top:1px solid var(--line);padding:30px 0 90px;color:var(--mute);fo
 .stat b{display:block;font-size:26px;color:var(--cyan)}
 .stat span{font-size:13px;color:var(--mute)}
 img{-webkit-touch-callout:none;pointer-events:auto}
+.btn.main{color:#fff}.btn:disabled{opacity:.55;cursor:not-allowed}
+:root:not([data-theme="dark"]) .brand img,:root:not([data-theme="dark"]) .hero img{mix-blend-mode:normal;border-radius:10px}
+:root:not([data-theme="dark"]) .hero img{border-radius:18px}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.betagrid{display:grid;gap:18px;grid-template-columns:minmax(0,1fr);align-items:start}
+.fgrid{display:grid;gap:0 16px;grid-template-columns:minmax(0,1fr)}.fgrid .full{grid-column:1/-1}
+.selfie{display:block;max-width:100%;width:240px;border-radius:12px;border:1px solid var(--line);margin:4px 0 12px}
+.setuju{display:flex;gap:8px;align-items:flex-start}.setuju input{width:auto;margin-top:5px}.setuju a{text-decoration:underline}
+.chip{display:inline-block;border-radius:99px;padding:2px 12px;font-size:13px;font-weight:600;border:1px solid var(--line);color:var(--mute)}
+.chip.yes{color:var(--ok);border-color:var(--ok)}.chip.no{color:var(--bad);border-color:var(--bad)}
+.steps{margin:0 0 14px;padding-left:20px;color:var(--mute);font-size:14.5px}.steps li{margin-bottom:6px}
+.det{display:grid;gap:2px 20px;grid-template-columns:minmax(0,1fr);margin:6px 0 8px}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+nav button#nTema{white-space:nowrap}
+@media (min-width:640px){.fgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.det{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (min-width:900px){.betagrid{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}}
+@media (min-width:1100px){
+.wrap{max-width:1180px;padding:0 36px}header .wrap{height:68px}nav{gap:24px;font-size:15px}
+.hero{padding:64px 0 52px}.hero img{width:min(760px,100%)}h1{font-size:clamp(40px,4.2vw,60px)}.lead{font-size:18px;max-width:60ch}
+section{padding:72px 0}.grid{grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}.card{padding:22px}.sub{font-size:17px}}
+@media (min-width:1500px){.wrap{max-width:1320px}}
 </style>
 </head>
 <body>
@@ -100,8 +123,9 @@ img{-webkit-touch-callout:none;pointer-events:auto}
 <a class="brand nocopy" href="#beranda"><img draggable="false" src="data:image/jpeg;base64,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" alt="" width="54" height="36">KOPE <svg class="cek ver" viewBox="0 0 24 24" width="18" height="18" role="img" aria-label="Situs resmi KOPE Technology"><title>Situs resmi KOPE Technology</title><polygon points="12.00,0.50 13.91,2.39 16.40,1.38 17.44,3.85 20.13,3.87 20.15,6.56 22.62,7.60 21.61,10.09 23.50,12.00 21.61,13.91 22.62,16.40 20.15,17.44 20.13,20.13 17.44,20.15 16.40,22.62 13.91,21.61 12.00,23.50 10.09,21.61 7.60,22.62 6.56,20.15 3.87,20.13 3.85,17.44 1.38,16.40 2.39,13.91 0.50,12.00 2.39,10.09 1.38,7.60 3.85,6.56 3.87,3.87 6.56,3.85 7.60,1.38 10.09,2.39" fill="#1877F2" stroke="#1877F2" stroke-width="1.2" stroke-linejoin="round"/><path d="M7.4 12.3l3 3L16.8 9" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 <button id="menu" aria-expanded="false" aria-controls="nav">Menu</button>
 <nav id="nav" aria-label="Menu utama">
-<a href="#beranda">Beranda</a><a href="#produk">Produk</a><a href="#layanan">Layanan</a><a href="#profil">Profil Perusahaan</a><a href="#lokasi">Lokasi</a><a href="#privasi">Privasi</a>
+<a href="#beranda">Beranda</a><a href="#produk">Produk</a><a href="#beta">Uji Coba Beta</a><a href="#profil">Profil Perusahaan</a><a href="#lokasi">Lokasi</a><a href="#privasi">Privasi</a>
 <a href="#pesanan" id="nPesanan" hidden>Akun Saya</a><a href="#admin" id="nAdmin" hidden>Admin</a>
+<button class="lnk" id="nTema" type="button" aria-pressed="false">Mode gelap</button>
 <a href="#masuk" id="nMasuk">Masuk</a><button class="lnk" id="nKeluar" hidden>Keluar</button>
 </nav></div></header>
 
@@ -119,7 +143,7 @@ img{-webkit-touch-callout:none;pointer-events:auto}
 <p class="resmi"><svg class="cek ver" viewBox="0 0 24 24" width="18" height="18" role="img" aria-label="Situs resmi KOPE Technology"><title>Situs resmi KOPE Technology</title><polygon points="12.00,0.50 13.91,2.39 16.40,1.38 17.44,3.85 20.13,3.87 20.15,6.56 22.62,7.60 21.61,10.09 23.50,12.00 21.61,13.91 22.62,16.40 20.15,17.44 20.13,20.13 17.44,20.15 16.40,22.62 13.91,21.61 12.00,23.50 10.09,21.61 7.60,22.62 6.56,20.15 3.87,20.13 3.85,17.44 1.38,16.40 2.39,13.91 0.50,12.00 2.39,10.09 1.38,7.60 3.85,6.56 3.87,3.87 6.56,3.85 7.60,1.38 10.09,2.39" fill="#1877F2" stroke="#1877F2" stroke-width="1.2" stroke-linejoin="round"/><path d="M7.4 12.3l3 3L16.8 9" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg> Situs resmi KOPE Technology</p>
 <h1>Technology That Moves You Forward.</h1>
 <p class="lead">KOPE menghadirkan solusi digital, aplikasi inovatif, dan teknologi modern untuk membantu individu dan bisnis berkembang di era digital.</p>
-<div class="btns"><a class="btn main" href="#produk">Lihat produk</a><a class="btn" href="#layanan">Minta penawaran</a></div>
+<div class="btns"><a class="btn main" href="#produk">Lihat produk</a><a class="btn" href="#beta">Daftar uji coba beta</a></div>
 </div>
 <div class="wrap feed" id="homeFeed"></div>
 <div class="wrap" id="berandaBox" style="padding:10px 20px 50px" hidden><div class="stats" id="angkaBox"></div><div class="grid" id="poinBox"></div></div>
@@ -148,6 +172,42 @@ img{-webkit-touch-callout:none;pointer-events:auto}
 </form></div>
 </div></section>
 
+<section id="beta" class="view"><div class="wrap">
+<h2>Akses uji coba beta</h2>
+<p class="sub">Aplikasi dan produk KOPE yang belum dirilis resmi bisa Anda coba lebih dulu. Daftar di sini, tunggu admin menyetujui, lalu tautan uji coba muncul di halaman ini.</p>
+<div class="betagrid">
+<div>
+<div class="card" id="betaStatus" hidden></div>
+<form id="fBeta" class="card" autocomplete="on">
+<h3>Daftar uji coba pengguna</h3>
+<div class="fgrid">
+<label class="full">Nama lengkap<input name="nama" required minlength="2" maxlength="80" autocomplete="name"></label>
+<label>Nomor HP<input name="hp" type="tel" inputmode="tel" required maxlength="20" autocomplete="tel" placeholder="08xxxxxxxxxx"></label>
+<label>Gmail<input name="gmail" type="email" required maxlength="120" autocomplete="email" placeholder="nama@gmail.com"></label>
+<div class="full fgrid" id="betaPwBox">
+<label>Kata sandi (minimal 8, ada huruf dan angka)<input name="pw" type="password" minlength="8" maxlength="128" autocomplete="new-password"></label>
+<label>Konfirmasi kata sandi<input name="pw2" type="password" minlength="8" maxlength="128" autocomplete="new-password"></label>
+</div>
+<label>Jenis kelamin<select name="gender" required><option value="">Pilih</option><option value="Pria">Pria</option><option value="Wanita">Wanita</option></select></label>
+<label class="full">Alamat rumah (boleh kosong)<textarea name="alamat" rows="2" maxlength="200" autocomplete="street-address"></textarea></label>
+<label class="full">Foto selfie verifikasi (foto wajah Anda sendiri, jelas, tanpa filter)<input name="foto" id="betaFoto" type="file" accept="image/*" required></label>
+<img id="betaPrev" class="selfie full" alt="Pratinjau selfie" hidden>
+</div>
+<div class="hp" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off"></label></div>
+<label class="setuju"><input type="checkbox" id="betaSetuju" name="setuju" required><span>Saya sudah membaca dan setuju dengan <a href="#privasi">kebijakan privasi</a>, termasuk pemakaian foto selfie saya untuk verifikasi.</span></label>
+<button class="btn main" id="bBeta" type="submit" disabled>Daftar uji coba</button>
+<div id="mBeta" role="status"></div>
+</form>
+</div>
+<aside class="card"><h3>Cara kerjanya</h3>
+<ol class="steps"><li>Isi formulir dan unggah foto selfie.</li><li>Admin memeriksa permintaan Anda.</li><li>Jika disetujui, tautan uji coba muncul di halaman ini. Selama menunggu, status Anda tertera di sini.</li></ol>
+<h3>Privasi</h3>
+<p class="small">Kami mengumpulkan data Anda untuk menjaga situs dari virus dan dari orang yang mencoba mengakses perusahaan tanpa izin. Foto selfie dihapus otomatis dari server setelah admin memutuskan.</p>
+<p class="small">Kata sandi dikelola Firebase. Tidak ada orang yang bisa melihatnya, termasuk admin.</p>
+</aside>
+</div>
+</div></section>
+
 <section id="profil" class="view"><div class="wrap">
 <h2>Profil perusahaan</h2>
 <p class="sub">KOPE Technology bergerak di pengembangan website, aplikasi, game, teknologi AI, produk elektronik, layanan cloud, dan konsultasi teknologi. Slogan kami: Innovation for Everyone.</p>
@@ -163,13 +223,17 @@ img{-webkit-touch-callout:none;pointer-events:auto}
 <h2>Kebijakan privasi</h2>
 <p class="sub">Privasi Anda penting bagi KOPE Technology. Ringkasannya:</p>
 <h3>Data yang kami kumpulkan</h3>
-<p>Nama dan email (saat mendaftar atau mengirim permintaan layanan), serta isi permintaan yang Anda tulis sendiri. Kami tidak meminta alamat rumah, nomor kartu, atau kata sandi untuk disimpan oleh website ini.</p>
+<p>Saat membuat akun: nama dan email. Saat mendaftar uji coba beta: nama lengkap, nomor HP, Gmail, jenis kelamin, alamat rumah (boleh dikosongkan), dan foto selfie verifikasi. Kami tidak menyimpan nomor kartu. Kata sandi dikelola Firebase, bukan oleh website ini.</p>
 <h3>Untuk apa data dipakai</h3>
-<p>Hanya untuk menanggapi permintaan layanan dan mengelola akun Anda. Data tidak dijual dan tidak dibagikan untuk iklan.</p>
+<p>Kami mengumpulkan data Anda untuk menjaga situs dan produk uji coba dari virus dan dari orang yang mencoba mengakses perusahaan tanpa izin, memeriksa pendaftar uji coba beta, dan menanggapi permintaan Anda. Data tidak dijual dan tidak dibagikan untuk iklan.</p>
+<h3>Foto selfie</h3>
+<p>Foto hanya dipakai untuk verifikasi dan hanya bisa dilihat admin. Foto dihapus otomatis dari server saat admin menerima, menolak, atau menghapus permintaan Anda, atau saat Anda menghapus permintaan atau akun sendiri. Selama permintaan belum diputuskan, foto tetap tersimpan.</p>
 <h3>Di mana data disimpan</h3>
-<p>Di layanan Google Firebase. Kata sandi dikelola Firebase dan tidak bisa dilihat oleh KOPE. Data hanya bisa dibaca oleh Anda dan admin KOPE yang berwenang.</p>
+<p>Di layanan Google Firebase. Data hanya bisa dibaca oleh Anda dan admin KOPE yang berwenang.</p>
+<h3>Berapa lama</h3>
+<p>Data uji coba disimpan selama program uji coba berjalan atau sampai Anda menghapusnya.</p>
 <h3>Hak Anda</h3>
-<p>Anda dapat melihat dan menghapus permintaan atau seluruh akun Anda sendiri di menu Akun Saya. Untuk bantuan lain, hubungi kami lewat kontak resmi di bagian Lokasi.</p>
+<p>Anda dapat melihat status dan menghapus permintaan uji coba, permintaan lain, atau seluruh akun Anda sendiri (halaman Uji Coba Beta dan menu Akun Saya). Untuk bantuan lain, hubungi kami lewat kontak resmi di bagian Lokasi.</p>
 </div></section>
 
 <section id="lokasi" class="view"><div class="wrap">
@@ -212,7 +276,7 @@ img{-webkit-touch-callout:none;pointer-events:auto}
 <!-- ============ ADMIN ============ -->
 <section id="p-admin" class="panel"><div class="wrap">
 <h2>Admin</h2>
-<div class="tabs"><button class="btn sm on" data-t="a-produk">Produk</button><button class="btn sm" data-t="a-req">Permintaan layanan</button><button class="btn sm" data-t="a-home">Beranda</button><button class="btn sm" data-t="a-sub">Langganan</button><button class="btn sm" data-t="a-sos">Sosial</button><button class="btn sm" data-t="a-ft">Footer</button><button class="btn sm" data-t="a-isi">Cerita &amp; Angka</button><button class="btn sm" data-t="a-co">Perusahaan</button><button class="btn sm" data-t="a-set">Pengaturan</button></div>
+<div class="tabs"><button class="btn sm on" data-t="a-produk">Produk</button><button class="btn sm" data-t="a-beta">Uji coba beta</button><button class="btn sm" data-t="a-req">Permintaan layanan</button><button class="btn sm" data-t="a-home">Beranda</button><button class="btn sm" data-t="a-sub">Langganan</button><button class="btn sm" data-t="a-sos">Sosial</button><button class="btn sm" data-t="a-ft">Footer</button><button class="btn sm" data-t="a-isi">Cerita &amp; Angka</button><button class="btn sm" data-t="a-co">Perusahaan</button><button class="btn sm" data-t="a-set">Pengaturan</button></div>
 <div id="a-produk" class="at">
 <form id="fProduk" class="card" style="margin-bottom:18px">
 <div class="grid">
@@ -227,6 +291,13 @@ img{-webkit-touch-callout:none;pointer-events:auto}
 </form>
 <div id="aListProduk"></div>
 </div>
+
+<div id="a-beta" class="at" hidden>
+<form id="fBetaCfg" class="card" style="max-width:640px;margin-bottom:18px"><p class="small">Tautan ini hanya terlihat oleh peserta yang sudah Anda setujui. Disimpan di server, bukan di kode halaman.</p>
+<label>Tautan uji coba (https://)<input name="link" type="url" maxlength="300" placeholder="https://..."></label>
+<label>Catatan untuk peserta (boleh kosong)<textarea name="info" rows="2" maxlength="300"></textarea></label>
+<button class="btn main" type="submit">Simpan tautan</button><div id="mBetaCfg" role="status"></div></form>
+<h3>Pendaftar uji coba</h3><div id="aListBeta"><p class="ph">Memuat…</p></div></div>
 
 <div id="a-req" class="at" hidden><div id="aListReq"></div></div>
 <div id="a-home" class="at" hidden>
@@ -294,11 +365,12 @@ img{-webkit-touch-callout:none;pointer-events:auto}
 <tr><td style="padding:8px 6px;border-top:1px solid var(--line)">Privasi pelanggan</td><td style="padding:8px 6px;border-top:1px solid var(--line)">Kebijakan privasi tersedia, persetujuan diminta, pelanggan bisa menghapus data sendiri.</td></tr>
 <tr><td style="padding:8px 6px;border-top:1px solid var(--line)">Lencana centang biru</td><td style="padding:8px 6px;border-top:1px solid var(--line)">Hanya tampil di situs resmi. Status disimpan di server Firebase.</td></tr>
 <tr><td style="padding:8px 6px;border-top:1px solid var(--line)">Perlindungan halaman</td><td style="padding:8px 6px;border-top:1px solid var(--line)">Aktif: pembatas sumber skrip (CSP), blokir bingkai, batas percobaan masuk, keluar otomatis admin 30 menit.</td></tr>
+<tr><td style="padding:8px 6px;border-top:1px solid var(--line)">Uji coba beta</td><td style="padding:8px 6px;border-top:1px solid var(--line)">Data dan selfie hanya bisa dibaca pemilik dan admin. Selfie wajib terhapus saat admin memutuskan (dipaksa oleh Security Rules).</td></tr>
 <tr><td style="padding:8px 6px;border-top:1px solid var(--line)">Backup database</td><td style="padding:8px 6px;border-top:1px solid var(--line)">Manual. Unduh cadangan secara berkala, misalnya seminggu sekali.</td></tr>
 </table></div>
 <button class="btn main" id="bBackup" type="button">Unduh cadangan</button>
 <div id="mBackup" role="status"></div>
-<p class="small">Cadangan berisi produk, ulasan, permintaan layanan, langganan, pengaturan, dan konten beranda (termasuk data pelanggan). Simpan file ini di tempat yang aman.</p>
+<p class="small">Cadangan berisi produk, ulasan, permintaan layanan, langganan, pengaturan, konten beranda, dan pendaftar uji coba beta tanpa foto selfie (termasuk data pelanggan). Simpan file ini di tempat yang aman.</p>
 </div>
 </div></section>
 </main>
