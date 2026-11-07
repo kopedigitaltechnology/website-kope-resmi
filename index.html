@@ -149,10 +149,10 @@ section{padding:72px 0}.grid{grid-template-columns:repeat(auto-fill,minmax(260px
 </nav></div></header>
 
 <main>
-<div id="warn" class="wrap msg err" style="display:none;margin-top:14px">Firebase belum diisi. Buka file ini, cari bagian KONFIGURASI di atas script, lalu tempel kode dari akun Firebase kamu.</div>
+<div id="warn" class="wrap msg err" style="display:none;margin-top:14px">Koneksi server belum diisi. Buka app.js, cari bagian KONFIGURASI di bagian atas, lalu tempel kode koneksi dari akun server kamu.</div>
 
 <div id="palsu" class="wrap msg err" style="display:none;margin-top:14px"></div>
-<div id="verif" class="wrap msg err" style="display:none;margin-top:14px">Email admin belum diverifikasi. Buka email dari Firebase, tekan tautan verifikasi, lalu tekan tombol di bawah.<br>
+<div id="verif" class="wrap msg err" style="display:none;margin-top:14px">Email admin belum diverifikasi. Buka email verifikasi dari server, tekan tautannya, lalu tekan tombol di bawah.<br>
 <button class="btn sm" id="kirimUlang" type="button" style="margin-top:8px">Kirim ulang email</button> <button class="btn sm" id="sudahVerif" type="button" style="margin-top:8px">Saya sudah verifikasi</button></div>
 
 <!-- ============ HALAMAN UMUM ============ -->
@@ -243,13 +243,13 @@ section{padding:72px 0}.grid{grid-template-columns:repeat(auto-fill,minmax(260px
 <h2>Kebijakan privasi</h2>
 <p class="sub">Privasi Anda penting bagi KOPE Technology. Ringkasannya:</p>
 <h3>Data yang kami kumpulkan</h3>
-<p>Saat membuat akun: nama dan email. Saat mendaftar uji coba beta: nama lengkap, nomor HP, Gmail, jenis kelamin, alamat rumah (boleh dikosongkan), dan foto selfie verifikasi. Kami tidak menyimpan nomor kartu. Kata sandi dikelola Firebase, bukan oleh website ini.</p>
+<p>Saat membuat akun: nama dan email. Saat mendaftar uji coba beta: nama lengkap, nomor HP, Gmail, jenis kelamin, alamat rumah (boleh dikosongkan), dan foto selfie verifikasi. Kami tidak menyimpan nomor kartu. Kata sandi dikelola server keamanan, bukan oleh website ini.</p>
 <h3>Untuk apa data dipakai</h3>
 <p>Kami mengumpulkan data Anda untuk menjaga situs dan produk uji coba dari virus dan dari orang yang mencoba mengakses perusahaan tanpa izin, memeriksa pendaftar uji coba beta, dan menanggapi permintaan Anda. Data tidak dijual dan tidak dibagikan untuk iklan.</p>
 <h3>Foto selfie</h3>
 <p>Foto hanya dipakai untuk verifikasi dan hanya bisa dilihat admin. Foto dihapus otomatis dari server saat admin menerima, menolak, atau menghapus permintaan Anda, atau saat Anda menghapus permintaan atau akun sendiri. Selama permintaan belum diputuskan, foto tetap tersimpan.</p>
 <h3>Di mana data disimpan</h3>
-<p>Di layanan Google Firebase. Data hanya bisa dibaca oleh Anda dan admin KOPE yang berwenang.</p>
+<p>Di server pusat yang aman. Data hanya bisa dibaca oleh Anda dan admin KOPE yang berwenang.</p>
 <h3>Berapa lama</h3>
 <p>Data uji coba disimpan selama program uji coba berjalan atau sampai Anda menghapusnya.</p>
 <h3>Hak Anda</h3>
@@ -335,14 +335,14 @@ section{padding:72px 0}.grid{grid-template-columns:repeat(auto-fill,minmax(260px
 <button class="btn main" type="submit">Simpan langganan</button><div id="mSub" role="status"></div></form>
 <div id="aListSub"></div></div>
 <div id="a-sos" class="at" hidden>
-<form id="fSos" class="card" style="max-width:560px;margin-bottom:18px"><p class="small">Tampil di bagian bawah semua halaman. Disimpan di server Firebase.</p>
+<form id="fSos" class="card" style="max-width:560px;margin-bottom:18px"><p class="small">Tampil di bagian bawah semua halaman. Disimpan di server pusat.</p>
 <label>Platform<select name="p"><option value="youtube">YouTube</option><option value="tiktok">TikTok</option><option value="facebook">Facebook</option><option value="instagram">Instagram</option><option value="lain">Tautan lainnya</option></select></label>
 <label>Nama tombol (wajib untuk tautan lainnya)<input name="nama" maxlength="40"></label>
 <label>URL https://<input name="url" type="url" required placeholder="https://..."></label>
 <button class="btn main" type="submit">Tambah</button><div id="mSos" role="status"></div></form>
 <div id="aListSos"></div></div>
 <div id="a-isi" class="at" hidden>
-<form id="fCerita" class="card" style="max-width:560px"><p class="small">Cerita pendiri, tampil di halaman Profil. Disimpan di server Firebase, hanya admin yang bisa mengubah. Pisahkan paragraf dengan satu baris kosong.</p><label>Judul<input name="judul" maxlength="80"></label><label>Isi cerita<textarea name="isi" rows="10" maxlength="3000"></textarea></label><button class="btn main" type="submit">Simpan cerita</button><div id="mCerita" role="status"></div></form>
+<form id="fCerita" class="card" style="max-width:560px"><p class="small">Cerita pendiri, tampil di halaman Profil. Disimpan di server pusat, hanya admin yang bisa mengubah. Pisahkan paragraf dengan satu baris kosong.</p><label>Judul<input name="judul" maxlength="80"></label><label>Isi cerita<textarea name="isi" rows="10" maxlength="3000"></textarea></label><button class="btn main" type="submit">Simpan cerita</button><div id="mCerita" role="status"></div></form>
 <form id="fBeranda" class="card" style="max-width:560px;margin-top:14px"><p class="small">Tiga poin dan empat angka di halaman depan. Kosongkan baris yang tidak dipakai. Isi angka dengan data yang benar.</p><label>Poin 1: judul<input name="pj1" maxlength="40"></label><label>Poin 1: keterangan<input name="pt1" maxlength="140"></label><label>Poin 2: judul<input name="pj2" maxlength="40"></label><label>Poin 2: keterangan<input name="pt2" maxlength="140"></label><label>Poin 3: judul<input name="pj3" maxlength="40"></label><label>Poin 3: keterangan<input name="pt3" maxlength="140"></label><label>Angka 1<input name="an1" maxlength="12" placeholder="contoh: 120+"></label><label>Keterangan angka 1<input name="al1" maxlength="30" placeholder="contoh: Pengguna"></label><label>Angka 2<input name="an2" maxlength="12" placeholder="contoh: 120+"></label><label>Keterangan angka 2<input name="al2" maxlength="30" placeholder="contoh: Pengguna"></label><label>Angka 3<input name="an3" maxlength="12" placeholder="contoh: 120+"></label><label>Keterangan angka 3<input name="al3" maxlength="30" placeholder="contoh: Pengguna"></label><label>Angka 4<input name="an4" maxlength="12" placeholder="contoh: 120+"></label><label>Keterangan angka 4<input name="al4" maxlength="30" placeholder="contoh: Pengguna"></label><button class="btn main" type="submit">Simpan beranda</button><div id="mBeranda" role="status"></div></form></div>
 <div id="a-ft" class="at" hidden>
 <form id="fFoot" class="card" style="max-width:560px"><p class="small">Teks di bagian paling bawah semua halaman. Disimpan di server, hanya admin yang bisa mengubah. Tahun hak cipta terisi otomatis.</p>
@@ -351,7 +351,7 @@ section{padding:72px 0}.grid{grid-template-columns:repeat(auto-fill,minmax(260px
 <label>Nama untuk hak cipta (© tahun ...)<input name="hak" maxlength="60" placeholder="KOPE Technology"></label>
 <button class="btn main" type="submit">Simpan footer</button><div id="mFoot" role="status"></div></form></div>
 <div id="a-co" class="at" hidden>
-<form id="fCo" class="card" style="max-width:560px"><p class="small">Data ini disimpan di server Firebase dan tampil di halaman Lokasi.</p>
+<form id="fCo" class="card" style="max-width:560px"><p class="small">Data ini disimpan di server pusat dan tampil di halaman Lokasi.</p>
 <label>Nama perusahaan<input name="nama" maxlength="80"></label>
 <label>Alamat lengkap (jalan, nomor, kelurahan, kota, kode pos)<textarea name="alamat" rows="3" maxlength="400"></textarea></label>
 <label>Email<input name="email" type="email" maxlength="120"></label>
@@ -371,28 +371,28 @@ section{padding:72px 0}.grid{grid-template-columns:repeat(auto-fill,minmax(260px
 <div id="a-set" class="at" hidden>
 <h3>Pengaturan keamanan</h3>
 <form id="fAc" class="card" style="max-width:640px;margin-bottom:18px">
-<h3>Firebase App Check (reCAPTCHA v3)</h3>
+<h3>App Check (reCAPTCHA v3)</h3>
 <p class="small" id="acInfo">Memuat…</p>
-<p class="small">Isi hanya <strong>Site Key</strong> (kunci publik). <strong>Secret Key</strong> jangan ditaruh di sini atau di kode. Tempel Secret Key di Firebase Console, App Check, aplikasi web, reCAPTCHA v3. Hanya admin yang bisa menyimpan atau menghapus Site Key.</p>
+<p class="small">Isi hanya <strong>Site Key</strong> (kunci publik). <strong>Secret Key</strong> jangan ditaruh di sini atau di kode. Tempel Secret Key di konsol server, bagian App Check, aplikasi web, reCAPTCHA v3. Hanya admin yang bisa menyimpan atau menghapus Site Key.</p>
 <label>Site Key reCAPTCHA v3<input name="sitekey" maxlength="80" autocomplete="off" spellcheck="false"></label>
 <label class="setuju"><input type="checkbox" name="yakin"><span>Saya yakin ini Site Key, bukan Secret Key.</span></label>
 <div class="acts"><button class="btn main" type="submit">Simpan Site Key</button><button class="btn" type="button" id="bAcHapus">Hapus Site Key</button></div>
 <div id="mAc" role="status"></div>
-<p class="small">Penting: kalau Site Key hanya disimpan di sini, jangan tekan Enforce untuk Firestore di Firebase Console. Kunci dibaca dari database yang sama, jadi pengunjung baru bisa gagal memuat data. Untuk perlindungan penuh (Enforce), isi juga <code>APPCHECK_SITE_KEY</code> di app.js. Site Key bersifat publik, bukan rahasia.</p>
+<p class="small">Penting: kalau Site Key hanya disimpan di sini, jangan tekan Enforce untuk database di konsol server. Kunci dibaca dari database yang sama, jadi pengunjung baru bisa gagal memuat data. Untuk perlindungan penuh (Enforce), isi juga <code>APPCHECK_SITE_KEY</code> di app.js. Site Key bersifat publik, bukan rahasia.</p>
 </form>
 <div class="card" style="overflow-x:auto;margin-bottom:18px"><table style="width:100%;border-collapse:collapse;font-size:14px">
 <tr><th align="left" style="padding:8px 6px">Bagian</th><th align="left" style="padding:8px 6px">Status</th></tr>
 <tr><td style="padding:8px 6px;border-top:1px solid var(--line)">GitHub Public</td><td style="padding:8px 6px;border-top:1px solid var(--line)">Aman untuk website. Jangan taruh kata sandi di file.</td></tr>
-<tr><td style="padding:8px 6px;border-top:1px solid var(--line)">Firebase Authentication</td><td style="padding:8px 6px;border-top:1px solid var(--line)" id="sAuth"></td></tr>
-<tr><td style="padding:8px 6px;border-top:1px solid var(--line)">Security Rules</td><td style="padding:8px 6px;border-top:1px solid var(--line)">Wajib. Pastikan sudah di-Publish di Firebase (Firestore, tab Rules).</td></tr>
-<tr><td style="padding:8px 6px;border-top:1px solid var(--line)">Database Firebase</td><td style="padding:8px 6px;border-top:1px solid var(--line)">Akses dibatasi lewat rules. Admin: hanya email yang diizinkan.</td></tr>
-<tr><td style="padding:8px 6px;border-top:1px solid var(--line)">Password pengguna</td><td style="padding:8px 6px;border-top:1px solid var(--line)">Disimpan oleh Firebase, tidak oleh website ini.</td></tr>
+<tr><td style="padding:8px 6px;border-top:1px solid var(--line)">Login pengguna</td><td style="padding:8px 6px;border-top:1px solid var(--line)" id="sAuth"></td></tr>
+<tr><td style="padding:8px 6px;border-top:1px solid var(--line)">Security Rules</td><td style="padding:8px 6px;border-top:1px solid var(--line)">Wajib. Pastikan sudah di-Publish di konsol server (database, tab Rules).</td></tr>
+<tr><td style="padding:8px 6px;border-top:1px solid var(--line)">Database server</td><td style="padding:8px 6px;border-top:1px solid var(--line)">Akses dibatasi lewat rules. Admin: hanya email yang diizinkan.</td></tr>
+<tr><td style="padding:8px 6px;border-top:1px solid var(--line)">Password pengguna</td><td style="padding:8px 6px;border-top:1px solid var(--line)">Disimpan oleh server keamanan, tidak oleh website ini.</td></tr>
 <tr><td style="padding:8px 6px;border-top:1px solid var(--line)">API rahasia</td><td style="padding:8px 6px;border-top:1px solid var(--line)">Tidak ada di HTML. Kunci pembayaran nanti hanya boleh di server.</td></tr>
 <tr><td style="padding:8px 6px;border-top:1px solid var(--line)">HTTPS</td><td style="padding:8px 6px;border-top:1px solid var(--line)" id="sHttps"></td></tr>
 <tr><td style="padding:8px 6px;border-top:1px solid var(--line)">Privasi pelanggan</td><td style="padding:8px 6px;border-top:1px solid var(--line)">Kebijakan privasi tersedia, persetujuan diminta, pelanggan bisa menghapus data sendiri.</td></tr>
-<tr><td style="padding:8px 6px;border-top:1px solid var(--line)">Lencana centang biru</td><td style="padding:8px 6px;border-top:1px solid var(--line)">Hanya tampil di situs resmi. Status disimpan di server Firebase.</td></tr>
+<tr><td style="padding:8px 6px;border-top:1px solid var(--line)">Lencana centang biru</td><td style="padding:8px 6px;border-top:1px solid var(--line)">Hanya tampil di situs resmi. Status disimpan di server pusat.</td></tr>
 <tr><td style="padding:8px 6px;border-top:1px solid var(--line)">Perlindungan halaman</td><td style="padding:8px 6px;border-top:1px solid var(--line)">Aktif: pembatas sumber skrip (CSP), blokir bingkai, batas percobaan masuk, keluar otomatis admin 30 menit.</td></tr>
-<tr><td style="padding:8px 6px;border-top:1px solid var(--line)">Firebase App Check</td><td style="padding:8px 6px;border-top:1px solid var(--line)">Site Key disimpan di server oleh admin. Secret Key hanya di Firebase Console, tidak pernah di kode.</td></tr>
+<tr><td style="padding:8px 6px;border-top:1px solid var(--line)">App Check</td><td style="padding:8px 6px;border-top:1px solid var(--line)">Site Key disimpan di server oleh admin. Secret Key hanya di konsol server, tidak pernah di kode.</td></tr>
 <tr><td style="padding:8px 6px;border-top:1px solid var(--line)">Uji coba beta</td><td style="padding:8px 6px;border-top:1px solid var(--line)">Data dan selfie hanya bisa dibaca pemilik dan admin. Selfie wajib terhapus saat admin memutuskan (dipaksa oleh Security Rules).</td></tr>
 <tr><td style="padding:8px 6px;border-top:1px solid var(--line)">Backup database</td><td style="padding:8px 6px;border-top:1px solid var(--line)">Manual. Unduh cadangan secara berkala, misalnya seminggu sekali.</td></tr>
 </table></div>

@@ -6,11 +6,11 @@ var firebaseConfig = {
   appId: "1:957517114720:web:1076ea32640f4de9dc4205"
 };
 var acAktif=false,acSumber='';
-var APPCHECK_SITE_KEY = "6LdWMBMuAAAAAAyafCKT_RCb5SoEASIp7AY-NST2"; // Site Key reCAPTCHA v3 (publik). Secret Key hanya di Firebase Console.
+var APPCHECK_SITE_KEY = "6LdWMBMuAAAAAAyafCKT_RCb5SoEASIp7AY-NST2"; // Site Key reCAPTCHA v3 (publik). Secret Key hanya di konsol server.
 var dariCacheResmi=false;
-// // isi dengan site key reCAPTCHA v3 dari Firebase Console > App Check. Kosong = App Check belum aktif.
+// // isi dengan site key reCAPTCHA v3 dari konsol server > App Check. Kosong = App Check belum aktif.
 var ADMIN_EMAIL = "kopedigitaltechnology@gmail.com"; // hanya email ini yang menjadi admin
-var co={}; // data perusahaan diambil dari server (Firestore: settings/company)
+var co={}; // data perusahaan diambil dari server (server: settings/company)
 /* ======================================================= */
 
 try{if(window.top!==window.self){document.body.innerHTML='';}}catch(e){document.body.innerHTML=''}
@@ -70,7 +70,7 @@ window.addEventListener('hashchange',route);
 var balik=null;$('keMasuk').onclick=function(){balik='layanan'};
 var db,auth,user=null,isAdmin=false,produk=[],cart=[],resmi=false,started=false,verData={},cerita={},beranda={},mulai=function(){};
 if(firebaseConfig.apiKey.indexOf('ISI')===0){
-  $('warn').style.display='block';$('daftarProduk').innerHTML='';$('daftarProduk').appendChild(el('p','ph','Produk muncul setelah Firebase diisi.'));route();
+  $('warn').style.display='block';$('daftarProduk').innerHTML='';$('daftarProduk').appendChild(el('p','ph','Produk muncul setelah koneksi server diisi.'));route();
 }else{
   firebase.initializeApp(firebaseConfig);
   auth=firebase.auth();db=firebase.firestore();
@@ -129,10 +129,10 @@ $('fMasuk').onsubmit=function(e){e.preventDefault();var f=e.target,m=$('mMasuk')
   if(Date.now()<kunciSampai){note(m,'Terlalu banyak percobaan. Tunggu satu menit.','err');return}
   if(daftar&&!(f.pw.value.length>=8&&/[A-Za-z]/.test(f.pw.value)&&/[0-9]/.test(f.pw.value))){note(m,'Kata sandi minimal 8 karakter dan memuat huruf serta angka.','err');return}
   note(m,'Memproses…');
-  if(!auth){note(m,'Firebase belum diisi.','err');return}
+  if(!auth){note(m,'Koneksi server belum diisi.','err');return}
   var p=daftar?auth.createUserWithEmailAndPassword(f.email.value,f.pw.value).then(function(c){return c.user.updateProfile({displayName:f.nama.value.trim()}).then(function(){return c.user.sendEmailVerification()})}):auth.signInWithEmailAndPassword(f.email.value,f.pw.value);
   p.then(function(){gagalMasuk=0;f.reset();note(m,'')}).catch(function(x){if(++gagalMasuk>=5){kunciSampai=Date.now()+60000;gagalMasuk=0}note(m,galat(x),'err')})};
-$('bGoogle').onclick=function(){var m=$('mMasuk');if(!auth){note(m,'Firebase belum diisi.','err');return}
+$('bGoogle').onclick=function(){var m=$('mMasuk');if(!auth){note(m,'Koneksi server belum diisi.','err');return}
   auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(function(){note(m,'Masuk dengan Google gagal. Coba lagi.','err')})};
 $('kirimUlang').onclick=function(){if(user)user.sendEmailVerification().then(function(){alert('Email verifikasi dikirim.')}).catch(function(){alert('Coba lagi beberapa menit lagi.')})};
 $('sudahVerif').onclick=function(){if(!user)return;user.reload().then(function(){return user.getIdToken(true)}).then(function(){isAdmin=user.emailVerified&&(user.email||'').toLowerCase()===ADMIN_EMAIL;if(isAdmin)mulai();afterAuth()})};
@@ -441,7 +441,7 @@ function loadBeta(){if(!db||betaBusy)return;
 function betaStatus(o,box){box.innerHTML='';box.appendChild(el('h3','','Status uji coba beta'));
   box.appendChild(el('span','chip '+(o.status==='disetujui'?'yes':o.status==='ditolak'?'no':''),STB[o.status]||o.status));
   box.appendChild(el('p','small','Atas nama '+o.name+' \u00b7 dikirim '+tgl(o.createdAt)));
-  if(user&&!user.emailVerified){var v=el('p','small','Email Anda belum diverifikasi. Buka kotak masuk Gmail, tekan tautan dari Firebase, lalu muat ulang halaman ini. ');
+  if(user&&!user.emailVerified){var v=el('p','small','Email Anda belum diverifikasi. Buka kotak masuk Gmail, tekan tautan dari server, lalu muat ulang halaman ini. ');
     var vb=el('button','btn sm','Kirim ulang email');vb.type='button';vb.onclick=function(){user.sendEmailVerification().then(function(){alert('Email verifikasi dikirim.')}).catch(function(){alert('Coba lagi beberapa menit lagi.')})};v.appendChild(vb);box.appendChild(v)}
   if(o.status==='menunggu')box.appendChild(el('p','','Permintaan Anda sedang diperiksa admin. Cek lagi nanti di halaman ini.'));
   if(o.status==='ditolak')box.appendChild(el('p','','Permintaan ini belum bisa kami setujui. Anda bisa menghapusnya lalu mendaftar lagi dengan data yang benar.'));
@@ -497,7 +497,7 @@ function betaTombol(p,w){var TS=function(){return firebase.firestore.FieldValue.
     var u=prompt('Tempel tautan resmi produk (https://...) agar bisa dibuka dari menu Produk:',p.link||'');if(u===null)return;var a=aman(u.trim());if(!a){alert('Tautan harus diawali https://');return}
     var bt=db.batch();bt.update(db.collection('products').doc(p.id),{beta:false,status:'siap',concept:false,link:a});bt.delete(db.collection('beta_links').doc(p.id));bt.commit().catch(gagal)};
   w.appendChild(e1);w.appendChild(e2)}
-/* --- admin: Site Key reCAPTCHA v3 untuk App Check (disimpan di Firestore, hanya admin yang bisa ubah) --- */
+/* --- admin: Site Key reCAPTCHA v3 untuk App Check (disimpan di server, hanya admin yang bisa ubah) --- */
 function ackOk(k){return typeof k==='string'&&/^6[A-Za-z0-9_-]{30,60}$/.test(k)}
 function aktifkanAc(k,s){if(acAktif||!ackOk(k))return;try{firebase.appCheck().activate(k,true);acAktif=true;acSumber=s}catch(e){}}
 function loadAc(){var i=$('acInfo');if(!i||!db)return;
