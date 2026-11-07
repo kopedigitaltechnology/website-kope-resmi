@@ -135,6 +135,18 @@ section{padding:72px 0}.grid{grid-template-columns:repeat(auto-fill,minmax(260px
 @media (prefers-reduced-motion:no-preference){.ovbox{animation:naik .18s ease-out}}
 @keyframes naik{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .cekr{display:none;color:var(--mute);font-size:14px;margin:18px 0 0}body.cekMuat .cekr{display:block}
+.sos{display:inline-flex;align-items:center;gap:8px}.sos svg{width:20px;height:20px;flex:none}
+.adov{z-index:40}
+.adbox{padding:0;width:100%;max-width:min(720px,94vw);overflow:hidden;position:relative}
+.admedia{background:#000;display:flex;align-items:center;justify-content:center;min-height:120px}
+.admedia img,.admedia video{display:block;width:100%;max-height:68vh;object-fit:contain;background:#000}
+.admedia iframe{display:block;width:100%;aspect-ratio:16/9;border:0}
+.adx{position:absolute;top:10px;right:10px;z-index:3;min-height:44px;padding:0 14px;border-radius:99px;border:1px solid rgba(255,255,255,.75);background:rgba(8,11,18,.85);color:#fff;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer}
+.adx:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
+.adbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 14px}
+.adtag{font-size:12px;font-weight:700;border:1px solid var(--line);border-radius:6px;padding:1px 7px;color:var(--mute)}
+.adact{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+.adthumb{display:block;max-width:140px;max-height:90px;border-radius:8px;border:1px solid var(--line);margin:6px 0}
 </style>
 </head>
 <body class="cekMuat">
@@ -252,6 +264,8 @@ section{padding:72px 0}.grid{grid-template-columns:repeat(auto-fill,minmax(260px
 <p>Di server pusat yang aman. Data hanya bisa dibaca oleh Anda dan admin KOPE yang berwenang.</p>
 <h3>Berapa lama</h3>
 <p>Data uji coba disimpan selama program uji coba berjalan atau sampai Anda menghapusnya.</p>
+<h3>Iklan dan penyimpanan di perangkat</h3>
+<p>Iklan tampil tanpa perlu login. Situs menyimpan beberapa data kecil di perangkat Anda: pilihan tema, salinan teks halaman supaya cepat terbuka, dan penghitung kunjungan untuk mengatur seberapa sering iklan muncul. Data ini tidak dikirim ke server dan tidak berisi identitas Anda.</p>
 <h3>Hak Anda</h3>
 <p>Anda dapat melihat status dan menghapus permintaan uji coba, permintaan lain, atau seluruh akun Anda sendiri (halaman Uji Coba Beta dan menu Akun Saya). Untuk bantuan lain, hubungi kami lewat kontak resmi di bagian Lokasi.</p>
 </div></section>
@@ -296,7 +310,7 @@ section{padding:72px 0}.grid{grid-template-columns:repeat(auto-fill,minmax(260px
 <!-- ============ ADMIN ============ -->
 <section id="p-admin" class="panel"><div class="wrap">
 <h2>Admin</h2>
-<div class="tabs"><button class="btn sm on" data-t="a-produk">Produk</button><button class="btn sm" data-t="a-beta">Uji coba beta</button><button class="btn sm" data-t="a-req">Permintaan layanan</button><button class="btn sm" data-t="a-home">Beranda</button><button class="btn sm" data-t="a-sub">Langganan</button><button class="btn sm" data-t="a-sos">Sosial</button><button class="btn sm" data-t="a-ft">Footer</button><button class="btn sm" data-t="a-isi">Cerita &amp; Angka</button><button class="btn sm" data-t="a-co">Perusahaan</button><button class="btn sm" data-t="a-set">Pengaturan</button></div>
+<div class="tabs"><button class="btn sm on" data-t="a-produk">Produk</button><button class="btn sm" data-t="a-beta">Uji coba beta</button><button class="btn sm" data-t="a-iklan">Iklan</button><button class="btn sm" data-t="a-req">Permintaan layanan</button><button class="btn sm" data-t="a-home">Beranda</button><button class="btn sm" data-t="a-sub">Langganan</button><button class="btn sm" data-t="a-sos">Sosial</button><button class="btn sm" data-t="a-ft">Footer</button><button class="btn sm" data-t="a-isi">Cerita &amp; Angka</button><button class="btn sm" data-t="a-co">Perusahaan</button><button class="btn sm" data-t="a-set">Pengaturan</button></div>
 <div id="a-produk" class="at">
 <form id="fProduk" class="card" style="margin-bottom:18px">
 <div class="grid">
@@ -315,6 +329,18 @@ section{padding:72px 0}.grid{grid-template-columns:repeat(auto-fill,minmax(260px
 <div id="a-beta" class="at" hidden>
 <p class="small" style="max-width:640px">Aplikasi uji coba dan tautannya diatur di tab Produk: tekan <strong>Jadikan uji coba beta</strong> pada produk. Kalau aplikasi sudah rilis penuh, tekan <strong>Rilis penuh</strong> dan aplikasi pindah ke menu Produk.</p>
 <h3>Pendaftar uji coba</h3><div id="aListBeta"><p class="ph">Memuat…</p></div></div>
+
+<div id="a-iklan" class="at" hidden>
+<form id="fIklan" class="card" style="max-width:640px;margin-bottom:18px">
+<p class="small">Iklan tampil sebagai layar overlay tanpa pengunjung perlu login. Disimpan di server pusat. Pengunjung baru melihatnya lebih dulu, pengunjung yang sering datang melihatnya jarang. Video diputar otomatis tanpa suara (aturan browser).</p>
+<label>Nama iklan (hanya untuk Anda)<input name="judul" required maxlength="60"></label>
+<label>Tautan foto atau video (https://)<input name="media" type="url" maxlength="500" placeholder="foto, video .mp4/.webm, YouTube, atau Vimeo"></label>
+<label>Atau unggah foto<input name="foto" type="file" accept="image/*"></label>
+<label>Tautan tujuan iklan (boleh kosong)<input name="tautan" type="url" maxlength="500" placeholder="https://..."></label>
+<label>Lama tampil (detik, 0 = sampai pengunjung menutup)<input name="durasi" type="number" min="0" max="300" value="10" required></label>
+<label class="setuju"><input type="checkbox" name="aktif" checked><span>Aktif (langsung tampil ke pengunjung)</span></label>
+<button class="btn main" type="submit">Tambah iklan</button><div id="mIklan" role="status"></div></form>
+<h3>Daftar iklan</h3><div id="aListIklan"><p class="ph">Memuat…</p></div></div>
 
 <div id="a-req" class="at" hidden><div id="aListReq"></div></div>
 <div id="a-home" class="at" hidden>
@@ -402,6 +428,12 @@ section{padding:72px 0}.grid{grid-template-columns:repeat(auto-fill,minmax(260px
 </div>
 </div></section>
 </main>
+<div id="ovIklan" class="ov adov" role="dialog" aria-modal="true" aria-label="Iklan" hidden>
+<div class="card adbox">
+<button class="adx" id="adTutup" type="button" aria-label="Tutup iklan">Tutup <span aria-hidden="true">✕</span></button>
+<div class="admedia" id="adMedia"></div>
+<div class="adbar"><span class="adtag">Iklan</span><span class="small" id="adHitung"></span><span class="adact"><button class="btn sm" id="adSuara" type="button" hidden>Nyalakan suara</button><a class="btn sm main" id="adLink" target="_blank" rel="noopener noreferrer" hidden>Buka tautan</a></span></div>
+</div></div>
 <div id="ovLogin" class="ov" role="dialog" aria-modal="true" aria-labelledby="ovJudul" hidden>
 <div class="card ovbox">
 <h3 id="ovJudul">Masuk untuk daftar uji coba</h3>
