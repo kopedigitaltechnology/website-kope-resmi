@@ -6,7 +6,9 @@ var firebaseConfig = {
   appId: "1:957517114720:web:1076ea32640f4de9dc4205"
 };
 var acAktif=false,acSumber='';
-var APPCHECK_SITE_KEY = ""; // isi dengan site key reCAPTCHA v3 dari Firebase Console > App Check. Kosong = App Check belum aktif.
+var APPCHECK_SITE_KEY = "6LdWMBMuAAAAAAyafCKT_RCb5SoEASIp7AY-NST2"; // Site Key reCAPTCHA v3 (publik). Secret Key hanya di Firebase Console.
+var dariCacheResmi=false;
+// // isi dengan site key reCAPTCHA v3 dari Firebase Console > App Check. Kosong = App Check belum aktif.
 var ADMIN_EMAIL = "kopedigitaltechnology@gmail.com"; // hanya email ini yang menjadi admin
 var co={}; // data perusahaan diambil dari server (Firestore: settings/company)
 /* ======================================================= */
@@ -71,19 +73,28 @@ if(firebaseConfig.apiKey.indexOf('ISI')===0){
   $('warn').style.display='block';$('daftarProduk').innerHTML='';$('daftarProduk').appendChild(el('p','ph','Produk muncul setelah Firebase diisi.'));route();
 }else{
   firebase.initializeApp(firebaseConfig);
-  aktifkanAc(APPCHECK_SITE_KEY,'kode');try{aktifkanAc(localStorage.getItem('kope-ack'),'cache')}catch(e){}auth=firebase.auth();db=firebase.firestore();
-  db.collection('settings').doc('appcheck').get().then(function(d){var k=d.exists?d.data().siteKey:'';if(ackOk(k)){try{localStorage.setItem('kope-ack',k)}catch(e){}aktifkanAc(k,'server')}else{try{localStorage.removeItem('kope-ack')}catch(e){}}}).catch(function(){});
+  auth=firebase.auth();db=firebase.firestore();
+  try{db.settings({experimentalAutoDetectLongPolling:true,merge:true})}catch(e){}
+  var acTunggu=siapAc(),CK='kope-cache',cache={};
+  try{cache=JSON.parse(localStorage.getItem(CK)||'{}')||{}}catch(e){cache={}}
+  function simpanC(k,v){cache[k]=v;try{var t=JSON.stringify(cache);if(t.length<150000)localStorage.setItem(CK,t)}catch(e){}}
+  acTunggu.then(function(){db.collection('settings').doc('appcheck').get().then(function(d){var k=d.exists?d.data().siteKey:'';if(ackOk(k)){try{localStorage.setItem('kope-ack',k)}catch(e){}aktifkanAc(k,'server')}else{try{localStorage.removeItem('kope-ack')}catch(e){}}}).catch(function(){});});
   mulai=function(){if(started)return;started=true;
   db.collection('home').onSnapshot(function(s){home=s.docs.map(function(d){var x=d.data();x.id=d.id;return x});renderHome();if($('p-admin').classList.contains('on'))loadHome()},function(){});
-  db.collection('settings').doc('footer').onSnapshot(function(d){foot=d.exists?d.data():{};renderFooter()},function(){renderFooter()});
-  db.collection('settings').doc('sosial').onSnapshot(function(d){sos=d.exists&&Array.isArray(d.data().daftar)?d.data().daftar:[];renderSosial()},function(){});
-  db.collection('settings').doc('company').onSnapshot(function(d){co=d.exists?d.data():{};renderKontak()},function(){});
-  db.collection('settings').doc('cerita').onSnapshot(function(d){cerita=d.exists?d.data():{};renderCerita();if($('p-admin').classList.contains('on'))fillIsi()},function(){});
-  db.collection('settings').doc('beranda').onSnapshot(function(d){beranda=d.exists?d.data():{};renderBeranda();if($('p-admin').classList.contains('on'))fillIsi()},function(){});
+  db.collection('settings').doc('footer').onSnapshot(function(d){foot=d.exists?d.data():{};simpanC('foot',foot);renderFooter()},function(){renderFooter()});
+  db.collection('settings').doc('sosial').onSnapshot(function(d){sos=d.exists&&Array.isArray(d.data().daftar)?d.data().daftar:[];simpanC('sos',sos);renderSosial()},function(){});
+  db.collection('settings').doc('company').onSnapshot(function(d){co=d.exists?d.data():{};simpanC('co',co);renderKontak()},function(){});
+  db.collection('settings').doc('cerita').onSnapshot(function(d){cerita=d.exists?d.data():{};simpanC('cerita',cerita);renderCerita();if($('p-admin').classList.contains('on'))fillIsi()},function(){});
+  db.collection('settings').doc('beranda').onSnapshot(function(d){beranda=d.exists?d.data():{};simpanC('beranda',beranda);renderBeranda();if($('p-admin').classList.contains('on'))fillIsi()},function(){});
   db.collection('products').onSnapshot(function(s){produk=s.docs.map(function(d){var x=d.data();x.id=d.id;return x});renderProduk();renderBetaApps();if($('detail').classList.contains('on'))openDetail();if($('p-admin').classList.contains('on'))loadAdmin()},function(){$('daftarProduk').textContent='Produk belum bisa dimuat.'});
   };
+  var mulai0=mulai;mulai=function(){acTunggu.then(mulai0)};
   auth.onAuthStateChanged(function(u){user=u;isAdmin=!!u&&u.emailVerified&&(u.email||'').toLowerCase()===ADMIN_EMAIL;if(isAdmin)mulai();afterAuth()});
-  db.collection('settings').doc('verifikasi').get().then(function(d){verData=d.exists?d.data():{};resmi=verData.aktif===true&&verData.domain===location.hostname;document.body.classList.toggle('resmiOk',resmi);if(resmi)mulai();else tampilPalsu(!d.exists?'belum-diatur':verData.aktif!==true?'tidak-aktif':'domain-beda')}).catch(function(){tampilPalsu('akses-ditolak')});
+  acTunggu.then(function(){db.collection('settings').doc('verifikasi').get().then(function(d){verData=d.exists?d.data():{};resmi=verData.aktif===true&&verData.domain===location.hostname;
+    document.body.classList.toggle('resmiOk',resmi);document.body.classList.remove('cekMuat');
+    try{if(resmi)localStorage.setItem('kope-resmi',location.hostname);else localStorage.removeItem('kope-resmi')}catch(e){}
+    if(resmi)mulai();else if(dariCacheResmi){dariCacheResmi=false;location.reload()}else tampilPalsu(!d.exists?'belum-diatur':verData.aktif!==true?'tidak-aktif':'domain-beda')
+  }).catch(function(){document.body.classList.remove('cekMuat');if(!resmi)tampilPalsu('akses-ditolak')})});
 }
 function tampilPalsu(why){var b=$('palsu');b.innerHTML='';
   b.appendChild(document.createTextNode(verData.pesan||'Situs ini tidak terverifikasi sebagai situs resmi.'));
@@ -500,3 +511,22 @@ $('fAc').onsubmit=function(e){e.preventDefault();var f=e.target,m=$('mAc'),k=f.s
   db.collection('settings').doc('appcheck').set({siteKey:k,updatedAt:firebase.firestore.FieldValue.serverTimestamp()}).then(function(){f.reset();note(m,'Site Key tersimpan di server. Berlaku saat pengunjung memuat ulang halaman.','ok');loadAc()}).catch(function(x){note(m,galat(x),'err')})};
 $('bAcHapus').onclick=function(){var m=$('mAc');if(!confirm('Hapus Site Key dari server? App Check tidak aktif lagi untuk pengunjung yang belum memakainya.'))return;
   db.collection('settings').doc('appcheck').delete().then(function(){note(m,'Site Key dihapus.','ok');loadAc()}).catch(function(x){note(m,galat(x),'err')})};
+
+/* ===== Buka lebih cepat ===== */
+/* App Check: cek dulu apakah reCAPTCHA bisa dijangkau (maks 3,5 dtk). Kalau tidak, situs tetap jalan tanpa menunggu. */
+function siapAc(){return new Promise(function(ok){
+  var k=APPCHECK_SITE_KEY;if(!ackOk(k)){try{k=localStorage.getItem('kope-ack')||''}catch(e){k=''}}
+  if(!ackOk(k)){ok();return}
+  var beres=false,fin=function(){if(!beres){beres=true;ok()}};
+  setTimeout(fin,3500);
+  fetch('https://www.google.com/recaptcha/api.js',{mode:'no-cors',cache:'force-cache'}).then(function(){aktifkanAc(k,k===APPCHECK_SITE_KEY?'kode':'cache');fin()}).catch(fin)})}
+/* Tampilkan salinan terakhir dari perangkat ini dulu, lalu timpa dengan data server begitu datang. */
+(function(){if(!db)return;
+  if(cache.foot){foot=cache.foot;renderFooter()}
+  if(Array.isArray(cache.sos)){sos=cache.sos;renderSosial()}
+  if(cache.co){co=cache.co;renderKontak()}
+  if(cache.cerita){cerita=cache.cerita;renderCerita()}
+  if(cache.beranda){beranda=cache.beranda;renderBeranda()}
+  var rc=null;try{rc=localStorage.getItem('kope-resmi')}catch(e){}
+  if(rc===location.hostname){dariCacheResmi=true;resmi=true;document.body.classList.add('resmiOk');document.body.classList.remove('cekMuat');mulai()}
+})();
